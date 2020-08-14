@@ -1,8 +1,11 @@
 import random
 import copy
 
+
+DICTIONARY_FILE_NAME = "enem.txt"
 WIDTH = 13
 HEIGHT = 20
+ITERATIONS = 10
 #special characters (flags)
 VOID_CHAR = '\''
 WORD_WRAPPER_CHAR = '.'
@@ -230,7 +233,7 @@ class Matrix:
 
 dictionary = []
 #imports dictionary
-with open("enem.txt") as file:
+with open(DICTIONARY_FILE_NAME) as file:
     dictionary = file.read().split('\n')
 
 invLen = lambda a : 1/(len(a)+1)
@@ -247,13 +250,13 @@ emptyMatrix = Matrix(WIDTH,HEIGHT)
 bestMatrix = emptyMatrix
 bestRatioMatrix = emptyMatrix
 #brute forces matrix with most intersections and best ratio
-for i in range(0,1):
+for i in range(0,ITERATIONS):
     dictionary.sort(key = rand)
     newMat = Matrix(WIDTH,HEIGHT)
     newMat.createCrossword(dictionary)
     totIntersections = newMat.countIntersections()
     ratio = newMat.getIntersectionRatio()
-    print(i,totIntersections,ratio)
+    print("iteration:",i,"total of intersections:",totIntersections,"intersection to letter ratio:",ratio)
     if (mostIntersections < totIntersections):
         bestMatrix = copy.deepcopy(newMat)
         mostIntersections = totIntersections
@@ -261,13 +264,13 @@ for i in range(0,1):
         bestRatioMatrix = copy.deepcopy(newMat)
         bestRatio = ratio
 
-print("bestMatrix: intersections =",bestMatrix.countIntersections(),", ratio =",bestMatrix.getIntersectionRatio())
+print("Matrix with most intersections =",bestMatrix.countIntersections(),", ratio =",bestMatrix.getIntersectionRatio())
 bestMatrix.printM()
-print("bestRatioMatrix: intersections =",bestRatioMatrix.countIntersections(),", ratio =",bestRatioMatrix.getIntersectionRatio())
+print("Matrix with best ratio =",bestRatioMatrix.countIntersections(),", ratio =",bestRatioMatrix.getIntersectionRatio())
 bestRatioMatrix.printM()
 bestRatioMatrix.printDirections()
-bestRatioMatrix.fillSpacesWithNoise()
-bestRatioMatrix.printM()
+# bestRatioMatrix.fillSpacesWithNoise()
+# bestRatioMatrix.printM()
 
 
 
