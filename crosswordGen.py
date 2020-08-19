@@ -1,11 +1,14 @@
 import random
 import copy
+import statistics
 
-
-DICTIONARY_FILE_NAME = "enem.txt"
-WIDTH = 13
-HEIGHT = 20
-ITERATIONS = 10
+DICTIONARY_FILE_NAME = "dictionary.txt"
+# WIDTH = 20
+# HEIGHT = 30
+WIDTH = 14
+HEIGHT = 14
+ITERATIONS = 1           #brute force tries, 0 to skip. (worst, but still cool)
+LOOK_OVER_X_TOP_WORDS = 5  #look over algorythm, 0 to skip. (best)
 #special characters (flags)
 VOID_CHAR = '\''
 WORD_WRAPPER_CHAR = '.'
@@ -45,13 +48,19 @@ class Matrix:
                 matrixLine.append(self.Block())
             self.__matrix.append(matrixLine)
 
+    def getCurrentDir(self):
+        return self.__dirToggle
+
     def printM(self):
-        str = ""
+        string = ""
         for i in range(0,self.__HEIGHT):
             for j in range(self.__WIDTH):
-                str += self.__matrix[j][i].getChar() + " "
-            str +="\n"
-        print(str)
+                string += self.__matrix[j][i].getChar() + " "
+            string +="\n"
+        # str.replace(VOID_CHAR," ")
+        string = string.replace(WORD_WRAPPER_CHAR,' ')
+        string = string.replace(VOID_CHAR,' ')
+        print(string)
 
     def printDirections(self):
         str = ""
@@ -146,7 +155,6 @@ class Matrix:
                  if (i+offset<self.__HEIGHT):
                      self.__matrix[position][i+offset].set(string[i],VERT_DIR)
 
-
     def getBestPlace(self,direction,string):
         bestPos = -1
         bestScore = -1
@@ -163,18 +171,35 @@ class Matrix:
                 bestOffset = offset
         return bestOffset,bestPos,bestScore
 
-
     def placeWord(self,strWord):
         strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
         offset,pos,score = self.getBestPlace(self.__dirToggle,strWord)
         if(score==-1):
-            return
+            return -1
         self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset)
         # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
         if (self.__dirToggle == HORI_DIR):
             self.__dirToggle = VERT_DIR
         else:
             self.__dirToggle = HORI_DIR
+        return score
+
+    def placeWordDir(self,direction,strWord):
+        strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
+        offset,pos,score = self.getBestPlace(direction,strWord)
+        if(score==-1):
+            return -1
+        self.applyStrAtOffset(pos,direction,strWord,offset)
+        # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
+        return score
+
+    def sortDictionaryWithScores(self,dictionary):
+        def getScore(str):
+            offset,pos,score = self.getBestPlace(self.__dirToggle,WORD_WRAPPER_CHAR+str+WORD_WRAPPER_CHAR)
+            return score
+        dictionary.sort(key=len, reverse = True)
+        dictionary.sort(key=getScore, reverse = True)
+        # print(dictionary[0:10])
 
     def createCrossword(self,dictionary):
         words = dictionary.copy()
@@ -186,25 +211,19 @@ class Matrix:
             bestScore = -1
             bestId = -1
             bestStr = ""
-            for i in range(0,len(words)):
-                strWord = WORD_WRAPPER_CHAR + words[i] + WORD_WRAPPER_CHAR
-                offset,pos,score = self.getBestPlace(self.__dirToggle,strWord)
-                if bestScore < score or (score == bestScore and len(strWord) > len(bestStr)):
-                    bestOffset = offset
-                    bestPos = pos
-                    bestScore = score
-                    bestId = i
-                    bestStr = strWord
-            if not firstTime and bestScore <= 0:
+            self.sortDictionaryWithScores(words)
+            sc = self.placeWordDir(self.__dirToggle,words[0])
+            if not firstTime and sc <= 0:
                 return
-            self.applyStrAtOffset(bestPos,self.__dirToggle,bestStr,bestOffset)
-            words.pop(bestId)
+            # self.applyStrAtOffset(bestPos,self.__dirToggle,words[0],bestOffset)
+            words.pop(0)
             # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
             if (self.__dirToggle == HORI_DIR):
                 self.__dirToggle = VERT_DIR
             else:
                 self.__dirToggle = HORI_DIR
             firstTime = False
+
 
     def countIntersections(self):
         intersections = 0
@@ -223,7 +242,9 @@ class Matrix:
                     intersections += 1
                 elif self.__matrix[i][j].getDir() == VERT_DIR or self.__matrix[i][j].getDir() == HORI_DIR:
                     noIntersection += 1
-        return intersections/noIntersection
+        if (noIntersection+intersections == 0):
+            return -1
+        return intersections/noIntersection#(noIntersection+intersections)
 
     def fillSpacesWithNoise(self):
         for i in range(0,self.__WIDTH):
@@ -231,47 +252,99 @@ class Matrix:
                 if self.__matrix[i][j].getChar() == VOID_CHAR or self.__matrix[i][j].getChar() == WORD_WRAPPER_CHAR:
                     self.__matrix[i][j].set(chr(int(random.random()*25 + 97)),NO_DIR)
 
+
+def bruteForceAlgorythm(width,height,dictionary):
+    mostIntersections = -1
+    bestRatio = -1
+    emptyMatrix = Matrix(width,height)
+    bestMatrix = emptyMatrix
+    bestRatioMatrix = emptyMatrix
+    #brute forces matrix with most intersections and best ratio
+    scores = []
+    # import pdb; pdb.set_trace()
+    for i in range(0,ITERATIONS):
+        dictionary.sort(key = rand)
+        newMat = Matrix(width,height)
+        newMat.createCrossword(dictionary)
+        totIntersections = newMat.countIntersections()
+        ratio = newMat.getIntersectionRatio()
+        scores.append(ratio)
+        print("iteration:",i,"total of intersections:",totIntersections,"intersection to letter ratio:",ratio)
+        if (mostIntersections < totIntersections):
+            bestMatrix = copy.deepcopy(newMat)
+            mostIntersections = totIntersections
+        if (bestRatio < ratio):
+            bestRatioMatrix = copy.deepcopy(newMat)
+            bestRatio = ratio
+    return bestMatrix,bestRatioMatrix,scores
+
+def lookAheadAlgorythm(width,height,dictionary):
+
+    def calculatesFutureScore(dictionary, word, matrix):
+        newMatrix = copy.deepcopy(matrix)
+        newMatrix.placeWord(word)
+        newDictionary = dictionary.copy()
+        #remove current word of new dictionary
+        newDictionary.pop(newDictionary.index(word))
+        newMatrix.sortDictionaryWithScores(newDictionary)
+        newMatrix.createCrossword(newDictionary)
+        # score = newMatrix.getIntersectionRatio()
+        score = newMatrix.countIntersections()
+        return score, newMatrix
+
+    print("dictionary size:",len(dictionary))
+    matrix = Matrix(width,height)
+    usedWords = []
+    #otimizavel (proprimeira palavra testada varias vezes)
+    while True:
+        print("looking for next word...")
+        matrix.sortDictionaryWithScores(dictionary)
+        bestFutureMatrix = matrix
+        bestWord = dictionary[0]
+        bestScore = -1
+        score,futureMatrix = calculatesFutureScore(dictionary, dictionary[0], matrix)
+        if ((len(dictionary[0]) == 3 and score==2)) or (len(dictionary[0]) == 2 and score==1):
+            bestScore = score
+            bestWord = dictionary[0]
+            bestFutureMatrix = copy.deepcopy(futureMatrix)
+        else:
+            for word in dictionary[0:LOOK_OVER_X_TOP_WORDS]:
+                # calcula o melhor score futuro das cinco melhores palavras atuais
+                score,futureMatrix = calculatesFutureScore(dictionary, word, matrix)
+                print(score,": score of",word)
+
+                if score > bestScore:
+                    bestScore = score
+                    bestWord = word
+                    bestFutureMatrix = copy.deepcopy(futureMatrix)
+        if bestScore < 0:
+            break
+        sc = matrix.placeWord(bestWord)
+        if sc == -1:
+            break
+        print("selected word:",bestWord,". future score:",bestScore)
+        usedWords.append(bestWord)
+        #remove current word of the dictionary
+        dictionary.pop(dictionary.index(bestWord))
+    return matrix, usedWords
+
+
 dictionary = []
-#imports dictionary
+#imports dictionary and sorts
 with open(DICTIONARY_FILE_NAME) as file:
     dictionary = file.read().split('\n')
-
-invLen = lambda a : 1/(len(a)+1)
 rand = lambda a : random.random()
 dictionary.sort(key = rand)
-# dictionary = dictionary[0:20000]
-# matrix.createCrossword(dictionary)
-# for word in dictionary:
-#     matrix.placeWord(word)
-
-mostIntersections = -1
-bestRatio = -1
-emptyMatrix = Matrix(WIDTH,HEIGHT)
-bestMatrix = emptyMatrix
-bestRatioMatrix = emptyMatrix
-#brute forces matrix with most intersections and best ratio
-for i in range(0,ITERATIONS):
-    dictionary.sort(key = rand)
-    newMat = Matrix(WIDTH,HEIGHT)
-    newMat.createCrossword(dictionary)
-    totIntersections = newMat.countIntersections()
-    ratio = newMat.getIntersectionRatio()
-    print("iteration:",i,"total of intersections:",totIntersections,"intersection to letter ratio:",ratio)
-    if (mostIntersections < totIntersections):
-        bestMatrix = copy.deepcopy(newMat)
-        mostIntersections = totIntersections
-    if (bestRatio < ratio):
-        bestRatioMatrix = copy.deepcopy(newMat)
-        bestRatio = ratio
-
+# dictionary = dictionary [0:100]
+# Calls brute force algorythm
+bestMatrix,bestRatioMatrix,allScores = bruteForceAlgorythm(WIDTH,HEIGHT,dictionary)
 print("Matrix with most intersections =",bestMatrix.countIntersections(),", ratio =",bestMatrix.getIntersectionRatio())
 bestMatrix.printM()
 print("Matrix with best ratio =",bestRatioMatrix.countIntersections(),", ratio =",bestRatioMatrix.getIntersectionRatio())
 bestRatioMatrix.printM()
-bestRatioMatrix.printDirections()
-# bestRatioMatrix.fillSpacesWithNoise()
-# bestRatioMatrix.printM()
+# bestRatioMatrix.printDirections()
 
-
-
-import pdb; pdb.set_trace()
+# Calls look ahead algorythm
+if(LOOK_OVER_X_TOP_WORDS > 0):
+    matrix, usedWords = lookAheadAlgorythm(WIDTH,HEIGHT,dictionary)
+    matrix.printM()
