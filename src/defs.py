@@ -1,0 +1,6 @@
+OUTPUT_PATH = "data/output"
+INPUT_PATH = "data/input"
+CROSSWORDS_TO_GENERATE = 10
+DICTIONARY_FILE_NAME = "dictionary.txt"
+WIDTH = 14
+HEIGHT = 14
