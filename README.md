@@ -119,7 +119,7 @@ The first two numbers of each line of the descriptor indicates the X and Y origi
 4 8 | ldc
 ```
 
-Scpecial characters that indicates direction, end of word and blank spaces can easily be changes in the code.
+Scpecial characters that indicates direction, end of word and blank spaces can easily be changed in the code.
 
 ### TODO
 - Optimize some time consuming functions in Cython
