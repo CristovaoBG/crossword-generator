@@ -123,6 +123,7 @@ Scpecial characters that indicates direction, end of word and blank spaces can e
 
 ### TODO
 - Optimize some time consuming functions in Cython
+- Handle bad usage exceptions 
 
     
 Created by Cristóvão B. Gomes

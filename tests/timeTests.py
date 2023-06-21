@@ -3,14 +3,13 @@ import sys
 import time
 import datetime
 import pandas as pd
+import cProfile
+import pstats
 currentDir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(currentDir, '../src'))
 import fileHandler
 import crosswordMatrix
 import algorythms
-import io
-import cProfile
-import pstats
 
 def timeLookAheadAlg(iterations = 1):
     score = 0
