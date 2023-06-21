@@ -104,12 +104,12 @@ class Matrix:
         if direction == HORI_DIR:
             for i in range(0,self.__WIDTH):
                 lineStr += self.__matrix[i][line].getChar()
-                lineDirStr += self.__matrix[i][line].getDir();
+                lineDirStr += self.__matrix[i][line].getDir()
             lineStrLen = self.__WIDTH
         else:
             for i in range(0,self.__HEIGHT):
                 lineStr += self.__matrix[line][i].getChar()
-                lineDirStr += self.__matrix[line][i].getDir();
+                lineDirStr += self.__matrix[line][i].getDir()
             lineStrLen = self.__HEIGHT
         stringLen = len(string)
         if stringLen > lineStrLen + 1: #doesn't fit at all

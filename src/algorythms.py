@@ -56,7 +56,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
         if ((len(dictionary[0]) == 3 and score==2)) or (len(dictionary[0]) == 2 and score==1):
             bestScore = score
             bestWord = dictionary[0]
-            bestFutureMatrix = copy.deepcopy(futureMatrix)
+            #bestFutureMatrix = copy.deepcopy(futureMatrix)
         else:
             for word in dictionary[0:lookOverXTopWords]:
                 # calcula o melhor score futuro das cinco melhores palavras atuais
@@ -66,12 +66,12 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
                 if score > bestScore:
                     bestScore = score
                     bestWord = word
-                    bestFutureMatrix = copy.deepcopy(futureMatrix)
+                    #bestFutureMatrix = copy.deepcopy(futureMatrix)
                 #adds a little bit of impredictibility
                 elif score == bestScore and random.random() >= 0.5:
                     bestScore = score
                     bestWord = word
-                    bestFutureMatrix = copy.deepcopy(futureMatrix)
+                    #bestFutureMatrix = copy.deepcopy(futureMatrix)
 
         if bestScore < 0:
             break
@@ -80,6 +80,6 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
             break
         print("selected word:",bestWord,". future score:",bestScore)
         usedWords.append(bestWord)
-        #remove current word of the dictionary
+        #remove current word out of the dictionary
         dictionary.pop(dictionary.index(bestWord))
     return matrix, usedWords
