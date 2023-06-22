@@ -68,14 +68,13 @@ class Matrix:
         # str.replace(VOID_CHAR," ")
         return string
 
-    def printM(self):
+    def printM(self,wordWrapper = WORD_WRAPPER_CHAR, voidChar = VOID_CHAR):
         string = self.getMatrixString()
-        # str.replace(VOID_CHAR," ")
-        string = string.replace(WORD_WRAPPER_CHAR,' ')
-        string = string.replace(VOID_CHAR,' ')
+        string = string.replace(WORD_WRAPPER_CHAR,wordWrapper)
+        string = string.replace(VOID_CHAR,voidChar)
         printStr = ""
         for i in range(0,len(string)):
-            printStr += string[i] + " "
+            printStr += " " + string[i]
         print(printStr)
 
     def getDirectionsString(self):
@@ -112,7 +111,7 @@ class Matrix:
                 lineDirStr += self.__matrix[line][i].getDir()
             lineStrLen = self.__HEIGHT
         stringLen = len(string)
-        if stringLen > lineStrLen + 1: #doesn't fit at all
+        if stringLen > lineStrLen + 2: #doesn't fit at all
             return -1,-1
         #check if fits at the start
         intersections = 0
@@ -121,6 +120,8 @@ class Matrix:
         fits = True
         for i in range(0,stringLen-1):
             #check for vaccancy and for collisions
+            if(i==lineStrLen and string[i+1]): #check if is last position
+                continue
             if (string[i+1]!=lineStr[i] and lineStr[i]!=VOID_CHAR) or lineDirStr[i] == direction or lineDirStr[i] == BOTH_DIR:
                 fits = False
                 break
