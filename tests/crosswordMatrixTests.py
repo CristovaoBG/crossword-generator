@@ -12,20 +12,20 @@ class testUpdateUserList(unittest.TestCase):
     
     def testBestPlaceInLineMiddle(self):
         assertMatString = """   abcabcaababaa.
-                        b'.'c'''t'''c'
-                        cabcabcsbs.'a'
-                        a'c'b'''t'''a'
-                        b'd'c'''t'''a'
-                        c'e'a'''t'''a'
-                        arfrbr.'t'''a'
-                        b'g'b'''t'''a'
-                        c'h'a.acogwyui
-                        .'i'b'''t'''a'
-                        ''.'b'''t'''a'
-                        ''''.'''t'''a'
-                        zzzzzzzzxzzzpz
-                        ''''''''.'''a'
-                        """.replace('\t','').replace(' ','')
+                                b'.'c'''t'''c'
+                                cabcabcsbs.'a'
+                                a'c'b'''t'''a'
+                                b'd'c'''t'''a'
+                                c'e'a'''t'''a'
+                                arfrbr.'t'''a'
+                                b'g'b'''t'''a'
+                                c'h'a.acogwyui
+                                .'i'b'''t'''a'
+                                ''.'b'''t'''a'
+                                ''''.'''t'''a'
+                                zzzzzzzzxzzzpz
+                                ''''''''.'''a'
+                                """.replace('\t','').replace(' ','')
         mat = Matrix(14,14)
         #newMat.createCrossword(dictionary)
         mat.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcaababaa")

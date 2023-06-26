@@ -1,4 +1,4 @@
-
+import ctypes
 import random
 
 ITERATIONS = 0             #brute force tries, 0 to skip. (worst, but still cool)
@@ -11,6 +11,22 @@ NO_DIR = 'N'
 VERT_DIR = '|'
 HORI_DIR = '-'
 BOTH_DIR = '+'
+
+# instantiate C function interface
+cfunctions = ctypes.CDLL(".\\lib\\cfunctions.so")
+c_best_place_in_line = cfunctions.c_best_place_in_line
+c_best_place_in_line.argtypes = [
+    ctypes.c_int,       # height
+    ctypes.c_int,       # width
+    ctypes.c_char,      # direction ('v' or 'h')
+    ctypes.c_char_p,    # word
+    ctypes.c_char_p,    # matrixString
+    ctypes.c_int,       # line
+    ctypes.POINTER(ctypes.c_int),   # best offset
+    ctypes.POINTER(ctypes.c_int),   # intersection count
+    ]
+c_best_place_in_line.restype = None
+# end
 
 class Matrix:
 
@@ -44,6 +60,7 @@ class Matrix:
             return self.__direction
 
     def __init__(self, width,height):
+
         self.__WIDTH = width
         self.__HEIGHT = height
         self.__matrix = []
@@ -55,7 +72,6 @@ class Matrix:
             for row in range(0,height):
                 matrixLine.append(self.Block())
             self.__matrix.append(matrixLine)
-
     def getCurrentDir(self):
         return self.__dirToggle
 
@@ -95,6 +111,19 @@ class Matrix:
 
     def setChar(self,char,posx,posy):
         self.__matrix[posy][posx].set(char,NO_DIR)
+
+    def c_getBestPlaceInLine(self, line, direction, string):
+        c_line = ctypes.c_int(line)
+        c_height = ctypes.c_int(self.__HEIGHT)
+        c_width = ctypes.c_int(self.__WIDTH)
+        c_direction = ctypes.c_char(b'h' if direction=="HORI_DIR" else b'v')
+        c_word = ctypes.create_string_buffer(string.encode('utf-8'))
+        c_matrix_string = ctypes.create_string_buffer(self.getMatrixDescriptorStr().encode('utf-8'))
+        c_best_offset = ctypes.c_int(-1)
+        c_intersection_count = ctypes.c_int(-1)
+        c_best_place_in_line(c_height,c_width,c_direction,c_word,c_matrix_string,c_line,ctypes.byref(c_best_offset),ctypes.byref(c_intersection_count))
+        return c_best_offset.value, c_intersection_count.value
+
 
     def getBestPlaceInLine(self, line, direction, string):
         #convert line to string
