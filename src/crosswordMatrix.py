@@ -116,7 +116,7 @@ class Matrix:
         c_line = ctypes.c_int(line)
         c_height = ctypes.c_int(self.__HEIGHT)
         c_width = ctypes.c_int(self.__WIDTH)
-        c_direction = ctypes.c_char(b'h' if direction=="HORI_DIR" else b'v')
+        c_direction = ctypes.c_char(b'h' if direction==HORI_DIR else b'v')
         c_word = ctypes.create_string_buffer(string.encode('utf-8'))
         c_matrix_string = ctypes.create_string_buffer(self.getMatrixDescriptorStr().encode('utf-8'))
         c_best_offset = ctypes.c_int(-1)
@@ -157,7 +157,7 @@ class Matrix:
             #else
             if lineStr[i]!=VOID_CHAR and lineStr[i]!=WORD_WRAPPER_CHAR:
                 intersections += 1
-        if fits == True:
+        if fits:
             bestOffset = -1
             bestOffsetIntersections = intersections
             #check if fits at middle

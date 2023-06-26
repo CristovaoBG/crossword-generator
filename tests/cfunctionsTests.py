@@ -51,5 +51,6 @@ if __name__ == '__main__':
     mat.placeWordDir(crosswordMatrix.HORI_DIR,"zzzzzzzzxzzzpz") #shouldnt insert
     mat.placeWordDir(crosswordMatrix.HORI_DIR,"acogwyui") #FAIL word wrapper impede palavra de chegar ate o fim
     mat.placeWordDir(crosswordMatrix.VERT_DIR,"acaaaaaauaaapa") #FAIL word wrapper impede palavra de chegar ate o fim
-    bestoOffset, score = mat.c_getBestPlaceInLine(0, 'h', "mamaco")
+    bestoOffset, score = mat.c_getBestPlaceInLine(4, crosswordMatrix.HORI_DIR, "dacae")
+    print("bestOffset: " + str(bestoOffset) + " score: " + str(score))
     unittest.main()
