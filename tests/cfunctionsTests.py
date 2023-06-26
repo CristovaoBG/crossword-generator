@@ -15,7 +15,7 @@ class testUpdateUserList(unittest.TestCase):
         cfunctions.test()
 
     def testInterface(self):
-        return     
+        #return     
         cfunctions = ctypes.CDLL("H:\\Cris\\programacao\\crosswordGen\\crosswordGenerator\\lib\\cfunctions.so")
         string = ctypes.create_string_buffer(b"123456789") #3x3 matrix
         sizeX = ctypes.c_int(3)
@@ -30,12 +30,13 @@ class testUpdateUserList(unittest.TestCase):
             ctypes.POINTER(ctypes.c_int),
             ctypes.c_char_p
             ]
-        pyTestInterface.restype = None
+        pyTestInterface.restype = ctypes.c_int
 
-        pyTestInterface(sizeX,sizeY,ctypes.byref(x),ctypes.byref(y),string)
+        cIntReturn = pyTestInterface(sizeX,sizeY,ctypes.byref(x),ctypes.byref(y),string)
+        
+        self.assertEqual(1,cIntReturn)
+        self.assertEqual(string.value, b'abcdefghi')
 
-        print(string.value)
-        #self.assertEqual()
         
 
 # Executar os testes

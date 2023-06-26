@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 char** reconstructMatrix(int sizeX, int sizeY, char ** strings){
     
@@ -12,15 +13,16 @@ void test(){
     printf("testing...\n");
 }
 
-void testInterface(int sizeX, int sizeY, int *x, int *y, char *crossWordString){
+int testInterface(int sizeX, int sizeY, int *x, int *y, char *string){
     *x = 2;
     *y = 3;
-    for(int i=0; i < sizeX; i++){
-        for(int j=0; j < sizeY; j++){
-            printf(&crossWordString[i*sizeX+j]);
-            crossWordString[i*sizeX+j] = 'a' + i+3*j;
-        }
+    printf("sizeX: %d, sizeY: %d\nstring: %s\n",sizeX,sizeY,string);
+    int i = 0;
+    while( string[i]!='\0'){
+        string[i] = i + 'a';
+        i++;
     }
+    return 1;
 }
 
 //  compilation prompt: 
