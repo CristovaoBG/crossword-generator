@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 char** reconstructMatrix(int sizeX, int sizeY, char ** strings){
     
@@ -14,10 +15,13 @@ void test(){
 }
 
 int testInterface(int sizeX, int sizeY, int *x, int *y, char *string){
+    assert(strcmp(string,"123456789")==0);
+    printf("sizex: %d, sizey: %d\n");
+    assert(sizeX==3 && sizeY==4);
     *x = 2;
     *y = 3;
-    printf("sizeX: %d, sizeY: %d\nstring: %s\n",sizeX,sizeY,string);
     int i = 0;
+
     while( string[i]!='\0'){
         string[i] = i + 'a';
         i++;
