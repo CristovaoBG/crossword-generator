@@ -121,6 +121,13 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     int offset, score, best_score = -1;
     int fits;
     int best_offset = -1;
+
+    if (len_word_naked == len_line_str) { //nao implementado ainda #TODO
+        *offset_output = -1;
+        *score_output = -1;
+        return;
+    }
+
     // verifica no inicio
     fits = true;
     score = 0;
@@ -143,7 +150,7 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         printf("FITS IN THE BEGGINING! score: %d, offset = -1 (sempre -1 no comeco)\n",score);
         #endif
         best_score = score;
-        best_offset = -1;
+        best_offset = 0;
         //printf("\nFITS! score: %d offset:%d\n",score,offset);
     }
 
@@ -204,8 +211,11 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         #endif
     }
 
+    #ifdef DEBUG
+    printf("FINISHED! FINAL OFFSET: %d, FINAL SCORE = %d\n",best_offset, best_score);
+    #endif
 
-    *offset_output = best_offset;
+    *offset_output = best_offset - 1; //? TODO corrigir isso
     *score_output = best_score;
 }
 

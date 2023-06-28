@@ -125,6 +125,7 @@ class Matrix:
 
 
     def getBestPlaceInLine(self, line, direction, string):
+        string = WORD_WRAPPER_CHAR + string + WORD_WRAPPER_CHAR
         #convert line to string
         lineStr = ""
         lineDirStr = ""
@@ -207,6 +208,7 @@ class Matrix:
         self.words.append(self.Word(string,x,y,direction))
 
     def applyStrAtOffset(self,position,direction,string,offset):
+        string = WORD_WRAPPER_CHAR + string + WORD_WRAPPER_CHAR
         if offset == -1:
             string = string[1:]
             offset = 0
@@ -222,7 +224,7 @@ class Matrix:
                     self.__matrix[position][i+offset].set(string[i],VERT_DIR)
 
 
-    def getBestPlace(self,direction,string):
+    def getBestPlace(self,direction,string, c =False):
         bestPos = -1
         bestScore = -1
         bestOffset = -1
@@ -231,7 +233,10 @@ class Matrix:
         else:
             dimension = self.__WIDTH
         for i in range(0,dimension,2):
-            offset, score = self.getBestPlaceInLine(i,direction,string)
+            if (c):
+                offset, score = self.c_getBestPlaceInLine(i,direction,string)
+            else:
+                offset, score = self.getBestPlaceInLine(i,direction,string)
             #switch = HORI_DIR if direction == VERT_DIR else VERT_DIR
 #            c_offset, c_score = self.c_getBestPlaceInLine(i,direction,string)
             if (bestScore<score):
@@ -240,12 +245,12 @@ class Matrix:
                 bestOffset = offset
         return bestOffset,bestPos,bestScore
 
-    def placeWord(self,strWord):
-        strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
-        offset,pos,score = self.getBestPlace(self.__dirToggle,strWord)
+    def placeWord(self,strWord, c = False):
+        #strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
+        offset,pos,score = self.getBestPlace(self.__dirToggle,strWord, c)
         if(score==-1):
             return -1
-        self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset)
+        self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset, c)
         # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
         if (self.__dirToggle == HORI_DIR):
             self.__dirToggle = VERT_DIR
@@ -253,9 +258,9 @@ class Matrix:
             self.__dirToggle = HORI_DIR
         return score
 
-    def placeWordDir(self,direction,strWord):
-        strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
-        offset,pos,score = self.getBestPlace(direction,strWord)
+    def placeWordDir(self,direction,strWord, c = False):
+        #strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
+        offset,pos,score = self.getBestPlace(direction,strWord, c)
         if(score==-1):
             return -1
         self.applyStrAtOffset(pos,direction,strWord,offset)
