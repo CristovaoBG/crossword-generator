@@ -122,22 +122,21 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     int fits;
     int best_offset = -1;
 
-    if (len_word_naked == len_line_str) { //nao implementado ainda #TODO
-        *offset_output = -1;
-        *score_output = -1;
-        return;
-    }
-
     // verifica no inicio
     fits = true;
     score = 0;
-    for(i=0; i<len_word_wrapped-1; i++){
+    for(i=0; i<len_word_wrapped-1 && i<len_line_str; i++){
         //printf("ww: %c ls: %c\n",word_wrapped[i+1],line_string[i]);
         if (word_wrapped[i+1] != line_string[i]
             &&
             line_string[i] != VOID_CHAR)
         {
             fits = false;
+
+            #ifdef DEBUG
+            printf("DONT FIT AT BEGGINING: i:%d word_wrapped[i+1]: \"%c\" line_string[i] = \"%c\"\n",i,word_wrapped[i+1],line_string[i]);
+            #endif
+
             break;
         }
         // else
@@ -205,7 +204,7 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     }
     if(fits && score>best_score){
         best_score = score;
-        best_offset = len_line_str-len_word_wrapped+1;
+        best_offset = len_line_str-len_word_wrapped+2; // +2??? #TODO ver porque
         #ifdef DEBUG
         printf("FITS IN THE END! score: %d, offset = %d\n",score,best_offset);
         #endif
