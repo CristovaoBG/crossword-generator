@@ -79,9 +79,8 @@ class Matrix:
         string = ""
         for i in range(0,self.__HEIGHT):
             for j in range(self.__WIDTH):
-                string += self.__matrix[j][i].getChar()# + " "
+                string += self.__matrix[i][j].getChar()# + " "
             string +="\n"
-        # str.replace(VOID_CHAR," ")
         return string
 
     def printM(self,wordWrapper = WORD_WRAPPER_CHAR, voidChar = VOID_CHAR):
@@ -182,7 +181,7 @@ class Matrix:
         #check if fits at end
         fits = True
         intersections = 0
-        for i in range(0,stringLen-1):
+        for i in range(0,stringLen-2):
             #check for vaccancy and for collisions
             if (string[i]!=lineStr[i+offset] and lineStr[i+offset]!=VOID_CHAR) or lineDirStr[i+offset] == direction or lineDirStr[i+offset] == BOTH_DIR:
                 fits = False
@@ -233,6 +232,8 @@ class Matrix:
             dimension = self.__WIDTH
         for i in range(0,dimension,2):
             offset, score = self.getBestPlaceInLine(i,direction,string)
+            #switch = HORI_DIR if direction == VERT_DIR else VERT_DIR
+#            c_offset, c_score = self.c_getBestPlaceInLine(i,direction,string)
             if (bestScore<score):
                 bestScore = score
                 bestPos = i
