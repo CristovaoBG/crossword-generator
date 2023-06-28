@@ -35,10 +35,37 @@ class testUpdateUserList(unittest.TestCase):
         self.assertEqual(x.value,2)
         self.assertEqual(y.value,3)
     
+    # TODO continuar daqui, lembrar (testar as duas funcoes,
+    # em C e em Python, o resultado tem que ser o mesmo)
+    def testGetBestPlace(self):
+        mat = Matrix(14,14)
+        word = "paalavra,".replace(" ",crosswordMatrix.VOID_CHAR).replace(",",crosswordMatrix.WORD_WRAPPER_CHAR)
+        word2 = ",vertical,".replace(" ",crosswordMatrix.VOID_CHAR).replace(",",crosswordMatrix.WORD_WRAPPER_CHAR)
+        word3 = "paaa".replace(" ",crosswordMatrix.VOID_CHAR).replace(",",crosswordMatrix.WORD_WRAPPER_CHAR)
+        word4 = ",asdasdff,".replace(" ",crosswordMatrix.VOID_CHAR).replace(",",crosswordMatrix.WORD_WRAPPER_CHAR)
+        word5 = ",pli,".replace(" ",crosswordMatrix.VOID_CHAR).replace(",",crosswordMatrix.WORD_WRAPPER_CHAR)
+        word6 = ",vefghl".replace(" ",crosswordMatrix.VOID_CHAR).replace(",",crosswordMatrix.WORD_WRAPPER_CHAR)
+        mat.applyStrAtOffset(4,crosswordMatrix.HORI_DIR,word,0)
+        mat.applyStrAtOffset(2,crosswordMatrix.VERT_DIR,word2,2)
+        mat.applyStrAtOffset(4,crosswordMatrix.HORI_DIR,word3,5)
+        mat.applyStrAtOffset(6,crosswordMatrix.VERT_DIR,word4,4)
+        mat.applyStrAtOffset(8,crosswordMatrix.HORI_DIR,word5,0)
+        mat.applyStrAtOffset(10,crosswordMatrix.VERT_DIR,word6,7)
+        ####
+        print("best place: " + str(mat.getBestPlace(crosswordMatrix.HORI_DIR,"taaad")))
+        print("bpil: "+str(mat.getBestPlaceInLine(6,crosswordMatrix.HORI_DIR,"taaad")))
+        print("bpil_c: "+str(mat.c_getBestPlaceInLine(6,crosswordMatrix.VERT_DIR,"taaad")))
+        print(mat.getBestPlaceInLine(1,crosswordMatrix.VERT_DIR,"alla"))
+        print(mat.c_getBestPlaceInLine(5,crosswordMatrix.HORI_DIR,"avra"))
+        print(mat.c_getBestPlaceInLine(5,crosswordMatrix.HORI_DIR,"avra"))
+        mat.placeWordDir(crosswordMatrix.HORI_DIR,"avra")
+        mat.printM(',','.')
+
 
 # Executar os testes
-if __name__ == '__main__':
+if __name__ == 'a__main__':
     mat = Matrix(14,14)
+    # c functions must be equal python ones
     mat.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcaababaa")
     mat.placeWordDir(crosswordMatrix.VERT_DIR,"bcabcabbabb")
     mat.placeWordDir(crosswordMatrix.HORI_DIR,"cabcabcsbs")
@@ -53,4 +80,42 @@ if __name__ == '__main__':
     mat.placeWordDir(crosswordMatrix.VERT_DIR,"acaaaaaauaaapa") #FAIL word wrapper impede palavra de chegar ate o fim
     bestoOffset, score = mat.c_getBestPlaceInLine(4, crosswordMatrix.HORI_DIR, "dacae")
     print("bestOffset: " + str(bestoOffset) + " score: " + str(score))
-    unittest.main()
+    mat2 = Matrix(14,14)
+    mat2.setChar('a',0,4)
+    offset, score = mat2.getBestPlaceInLine(0,crosswordMatrix.HORI_DIR,"abcabcaababa")
+    c_offset, c_score = mat2.c_getBestPlaceInLine(0,crosswordMatrix.HORI_DIR,"abcabcaababa")
+    print("offset: " + str(score) + " c_offset: " + str(score))
+    print("score: " + str(score) + " c_score: " + str(score))
+    #mat2.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcaababaa")
+    #mat2.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcaababaa")
+    mat2.printM()
+    #unittest.main()
+
+if __name__ == '__main__':
+    mat = Matrix(14,14)
+    # c functions must be equal python ones
+    mat.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcaababaa")
+    mat.placeWordDir(crosswordMatrix.VERT_DIR,"bcabcabbabb")
+    mat.placeWordDir(crosswordMatrix.HORI_DIR,"cabcabcsbs")
+    mat.placeWordDir(crosswordMatrix.VERT_DIR,"abcabcabc")
+    mat.placeWordDir(crosswordMatrix.VERT_DIR,"bcdefghi")
+    mat.placeWordDir(crosswordMatrix.HORI_DIR,"arfrbr")
+    #mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcdefghi")
+    mat.placeWordDir(crosswordMatrix.VERT_DIR,"btbtttttotttx")
+    mat.placeWordDir(crosswordMatrix.HORI_DIR,"zzzzzzzzxzzzpz") 
+    mat.placeWordDir(crosswordMatrix.HORI_DIR,"zzzzzzzzxzzzpz") #shouldnt insert
+    mat.placeWordDir(crosswordMatrix.HORI_DIR,"acogwyui") #FAIL word wrapper impede palavra de chegar ate o fim
+    mat.placeWordDir(crosswordMatrix.VERT_DIR,"acaaaaaauaaapa") #FAIL word wrapper impede palavra de chegar ate o fim
+    mat.printM('.',' ')
+    #TODO assert para mat.getBestPlace(crosswordMatrix.HORI_DIR,"daca") = (2, 4, 2)
+    print("######## PYTHON #########")
+    print(mat.getBestPlace(crosswordMatrix.HORI_DIR,"daca"))
+    #TODO assert para mat.getBestPlace(crosswordMatrix.HORI_DIR,"daca") = (2, 2)
+    #TODO vertical ta horizontal e horizontal ta vertical kk
+    print(mat.getBestPlaceInLine(6,crosswordMatrix.VERT_DIR,"dacaaza"))
+    print("######## C ########")
+    touple = mat.c_getBestPlaceInLine(6,crosswordMatrix.VERT_DIR,"dacaaza")
+    print("######## AFTER C ########")
+    print(touple)
+    mat.placeWordDir(crosswordMatrix.VERT_DIR,"dacaaza")
+    mat.printM('.',' ')

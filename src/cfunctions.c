@@ -26,7 +26,7 @@ int test_interface(int sizeX, int sizeY, int *x, int *y, char *string){
 }
 
 char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], int width,int height){
-    char* token = strtok(matrixString, "\n"); 
+    char* token = strtok(matrixString, "\n");
     int x, y, i, j;
     char direction;
     char word[100];
@@ -43,37 +43,44 @@ char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], int
         int len = strlen(word);
         int dx = (direction == '-');
         int dy = (direction == '|');
-        
+
         // adiciona '.' no  inicio, se houver espaco
         if ((dx && x>0) || (dy && y>0)) matrix[y -1 * dy][x -1 * dx] = WORD_WRAPPER_CHAR;
 
         for (int j = 0; j < len; j++) {
             matrix[y + j * dy][x + j * dx] = word[j];
         }
-            
+
         matrix[y + len * dy][x + len * dx] = WORD_WRAPPER_CHAR;
-        
+
         token = strtok(NULL, "\n"); // passa para a próxima linha
-        
+
         }
     return NULL;
 }
 
 void get_line_string( int width, int height, char matrix[MAX_COLS][MAX_ROWS], char line_string[MAX_LINE], int line_num, char direction){
     int step = 0;
+
     if(direction == 'h'){
+        #ifdef DEBUG
+        printf("DECODING LINE WITH STRNCPY\n");
+        #endif
         strncpy(line_string,matrix[line_num],width);
         line_string[width+1] = '\0';
         return;
     }
     //else
+    #ifdef DEBUG
+    printf("DECODING LINE WITH FOR LOOP\n");
+    #endif
     for(step = 0; step < height; step ++){
         line_string[step] = matrix[step][line_num];
     }
     line_string[step] = '\0';
 }
 
-void c_best_place_in_line(int height, int width, char direction, char* word, char* matrix_string, int line, int* score_output, int* offset_output){
+void c_best_place_in_line(int height, int width, char direction, char* word, char* matrix_string, int line, int* offset_output, int* score_output){
     int i, j;
     char matrix[MAX_ROWS][MAX_COLS];
     char line_string[MAX_LINE], word_wrapped[MAX_LINE];
@@ -87,33 +94,29 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
          }
          printf("\n");
     }
-    
+
     printf("GETTING LINE STRING...\n");
     #endif
 
     get_line_string(width, height, matrix, line_string, line, direction);
 
     #ifdef DEBUG
-    printf("DONE!\nSETTING WRAPPER...\n");
+    printf("DONE! LINE STRING:\"%s\". SETTING WRAPPER...\n",line_string);
     #endif
 
     // coloca word wrapper
+    const int len_word_naked = strlen(word);
+    const int len_word_wrapped = len_word_naked + 2;
     strcpy(&word_wrapped[1],word);
     word_wrapped[0] = WORD_WRAPPER_CHAR;
-    word_wrapped[strlen(word_wrapped)] = WORD_WRAPPER_CHAR;
-    word_wrapped[strlen(word_wrapped)+1] = '\0';
-    
-    #ifdef DEBUG
-    printf("DONE!\n");
-    #endif
+    word_wrapped[len_word_naked+1] = WORD_WRAPPER_CHAR;
+    word_wrapped[len_word_naked+2] = '\0';
 
     #ifdef DEBUG
-    printf("LINE STRING:\"%s\"\n",line_string);
-    printf("WORD WRAPPER:\"%s\"\n",word_wrapped);
+    printf("DONE! WORD WRAPPER:\"%s\"\n",word_wrapped);
     #endif
 
     //get_line_string(width, height, matrix, line_string, 0, 'h');
-    const int len_word_wrapped = strlen(word_wrapped);
     const int len_line_str = strlen(line_string);
     int offset, score, best_score = -1;
     int fits;
@@ -121,7 +124,7 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     // verifica no inicio
     fits = true;
     score = 0;
-    for(i=0; i<len_word_wrapped-1; i++){      
+    for(i=0; i<len_word_wrapped-1; i++){
         //printf("ww: %c ls: %c\n",word_wrapped[i+1],line_string[i]);
         if (word_wrapped[i+1] != line_string[i]
             &&
@@ -142,15 +145,18 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         best_score = score;
         best_offset = -1;
         //printf("\nFITS! score: %d offset:%d\n",score,offset);
-    }   
-    
+    }
+
     //verifica no meio
-    for(offset=0; offset + len_word_wrapped < len_line_str-len_word_wrapped; offset++){
+    #ifdef DEBUG
+    printf("MIDDLE FOR LOOP SCOPE: len_line_str = %d, len_word_wrapped = %d\n",len_line_str,len_word_wrapped);
+    #endif
+    for(offset=0; offset <= len_line_str - len_word_wrapped; offset++){ //nao sei ao certo porque <= ao inves de <
         //printf("------%d------",line_string);
         //printf("---1---");
         fits = true;
         score = 0;
-        for(i=0; i<len_word_wrapped; i++){      
+        for(i=0; i<len_word_wrapped; i++){
             //printf("ww: %c ls: %c\n",word_wrapped[i],line_string[offset + i]);
             if (word_wrapped[i] != line_string[offset + i]
                 &&
@@ -167,18 +173,18 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         }
         if(fits && score>best_score){
             best_score = score;
-            best_offset = offset;
+            best_offset = offset + 1; //mais um para a origem ser na letra, e nao no wrapper
             #ifdef DEBUG
-            printf("FITS IN THE MIDDLE! score: %d, offset = %d\n",score,offset);
+            printf("FITS IN THE MIDDLE! score: %d, offset = %d\n",score,best_offset);
             #endif
         }
     }
     // verifica no final
     fits = true;
     score = 0;
-    
+
     for(i = len_line_str-len_word_wrapped+1; i<len_line_str; i++){
-        if (word_wrapped[len_line_str - len_word_wrapped + 1] != line_string[i]
+        if (word_wrapped[i-(len_line_str-len_word_wrapped+1)] != line_string[i]
             &&
             line_string[i] != VOID_CHAR)
         {
@@ -196,14 +202,14 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         #ifdef DEBUG
         printf("FITS IN THE END! score: %d, offset = %d\n",score,best_offset);
         #endif
-    }  
+    }
 
 
     *offset_output = best_offset;
     *score_output = best_score;
 }
 
-//  compilation prompt: 
+//  compilation prompt:
 //  > c:/mingw64/bin/gcc -m64 -fPIC -shared -o lib/cfunctions.so src/cfunctions.c
-//  for debug: 
+//  for debug:
 //  > c:/mingw64/bin/gcc -DDEBUG -m64 -fPIC -shared -o lib/cfunctions.so src/cfunctions.c
