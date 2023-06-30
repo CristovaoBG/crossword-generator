@@ -250,7 +250,7 @@ class Matrix:
         offset,pos,score = self.getBestPlace(self.__dirToggle,strWord, c)
         if(score==-1):
             return -1
-        self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset, c)
+        self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset)
         # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
         if (self.__dirToggle == HORI_DIR):
             self.__dirToggle = VERT_DIR
@@ -275,18 +275,13 @@ class Matrix:
         dictionary.sort(key=getScore, reverse = True)
         # print(dictionary[0:10])
 
-    def createCrossword(self,dictionary):
+    def createCrossword(self,dictionary, c = False):
         words = dictionary.copy()
         firstTime = True
         #find word with best score
         while(True):
-            bestOffset = -1
-            bestPos = -1
-            bestScore = -1
-            bestId = -1
-            bestStr = ""
             self.sortDictionaryWithScores(words)
-            sc = self.placeWordDir(self.__dirToggle,words[0])
+            sc = self.placeWordDir(self.__dirToggle,words[0], c)
             if not firstTime and sc <= 0:
                 return
             # self.applyStrAtOffset(bestPos,self.__dirToggle,words[0],bestOffset)
@@ -299,7 +294,7 @@ class Matrix:
             firstTime = False
 
 
-    def countIntersections(self):
+    def countIntersections(self): #TODO ver se vale otimizar
         intersections = 0
         for i in range(0,self.__WIDTH):
             for j in range(0,self.__HEIGHT):

@@ -46,7 +46,7 @@ def logPerformance():
     except FileNotFoundError:
         df = pd.DataFrame(data)
         df.to_csv("timesLog.csv", index=False)
-    
+
 def profile(command,locals, outputName):
     prof = cProfile.Profile()
     prof.runctx(command, None, locals)
@@ -56,6 +56,9 @@ def profile(command,locals, outputName):
     stats.sort_stats('cumtime')
     stats.print_stats()
 
+def dummy():
+    print("ok")
+
 if __name__ == "__main__":
-    #profile("timeBruteForceAlg(10)", locals = locals(), outputName="ProfileOfBruteForce")
+    profile("dummy()", locals = locals(), outputName="ProfileOfBruteForce")
     logPerformance()

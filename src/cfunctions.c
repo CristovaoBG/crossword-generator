@@ -9,6 +9,9 @@
 #define MAX_LINE 100
 #define VOID_CHAR ' '
 #define WORD_WRAPPER_CHAR '.'
+#define VERT_DIR '|'
+#define HORI_DIR '-'
+#define BOTH_DIR '+'
 
 int test_interface(int sizeX, int sizeY, int *x, int *y, char *string){
     assert(strcmp(string,"123456789")==0);
@@ -25,7 +28,7 @@ int test_interface(int sizeX, int sizeY, int *x, int *y, char *string){
     return 1;
 }
 
-char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], int width,int height){
+char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], char direction_matrix[MAX_COLS][MAX_ROWS], int width,int height){
     char* token = strtok(matrixString, "\n");
     int x, y, i, j;
     char direction;
@@ -34,6 +37,7 @@ char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], int
     for (i=0; i< width; i++){
         for (j=0; j<height; j++){
             matrix[i][j] = VOID_CHAR;
+            direction_matrix[i][j] = VOID_CHAR;
         }
     }
 
@@ -49,6 +53,13 @@ char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], int
 
         for (int j = 0; j < len; j++) {
             matrix[y + j * dy][x + j * dx] = word[j];
+            char current_direction = direction_matrix[y + j * dy][x + j * dx];
+            if(current_direction != VOID_CHAR){
+              direction_matrix[y + j * dy][x + j * dx] = BOTH_DIR;
+            }
+            else{
+              direction_matrix[y + j * dy][x + j * dx] = direction;
+            }
         }
 
         matrix[y + len * dy][x + len * dx] = WORD_WRAPPER_CHAR;
@@ -59,7 +70,7 @@ char** string_to_matrix(char *matrixString, char matrix[MAX_COLS][MAX_ROWS], int
     return NULL;
 }
 
-void get_line_string( int width, int height, char matrix[MAX_COLS][MAX_ROWS], char line_string[MAX_LINE], int line_num, char direction){
+void get_line_string( int width, int height, char matrix[MAX_COLS][MAX_ROWS],char direction_matrix[MAX_COLS][MAX_ROWS], char line_string[MAX_LINE],char direction_string[MAX_LINE], int line_num, char direction){
     int step = 0;
 
     if(direction == 'h'){
@@ -67,7 +78,9 @@ void get_line_string( int width, int height, char matrix[MAX_COLS][MAX_ROWS], ch
         printf("DECODING LINE WITH STRNCPY\n");
         #endif
         strncpy(line_string,matrix[line_num],width);
+        strncpy(direction_string,direction_matrix[line_num],width);
         line_string[width+1] = '\0';
+        direction_string[width+1] = '\0';
         return;
     }
     //else
@@ -76,15 +89,17 @@ void get_line_string( int width, int height, char matrix[MAX_COLS][MAX_ROWS], ch
     #endif
     for(step = 0; step < height; step ++){
         line_string[step] = matrix[step][line_num];
+        direction_string[step] = direction_matrix[step][line_num];
     }
     line_string[step] = '\0';
+    direction_string[step] = '\0';
 }
 
 void c_best_place_in_line(int height, int width, char direction, char* word, char* matrix_string, int line, int* offset_output, int* score_output){
     int i, j;
-    char matrix[MAX_ROWS][MAX_COLS];
-    char line_string[MAX_LINE], word_wrapped[MAX_LINE];
-    string_to_matrix(matrix_string, matrix, width, height);
+    char matrix[MAX_ROWS][MAX_COLS], direction_matrix[MAX_ROWS][MAX_COLS];
+    char line_string[MAX_LINE], word_wrapped[MAX_LINE], direction_string[MAX_LINE];
+    string_to_matrix(matrix_string, matrix, direction_matrix, width, height);
 
     #ifdef DEBUG
     printf("RECONSTRUCTED MATRIX IN C CODE:\n");
@@ -92,13 +107,20 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
          for (int j = 0; j < 14; j++) {
              printf("%c ", matrix[j][i]);
          }
+         printf("\n\n");
+    }
+
+    for (i = 0; i < 14; i++) {
+         for (int j = 0; j < 14; j++) {
+             printf("%c ", direction_matrix[j][i]);
+         }
          printf("\n");
     }
 
     printf("GETTING LINE STRING...\n");
     #endif
 
-    get_line_string(width, height, matrix, line_string, line, direction);
+    get_line_string(width, height, matrix, direction_matrix, line_string, direction_string, line, direction);
 
     #ifdef DEBUG
     printf("DONE! LINE STRING:\"%s\". SETTING WRAPPER...\n",line_string);
@@ -127,9 +149,11 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     score = 0;
     for(i=0; i<len_word_wrapped-1 && i<len_line_str; i++){
         //printf("ww: %c ls: %c\n",word_wrapped[i+1],line_string[i]);
-        if (word_wrapped[i+1] != line_string[i]
-            &&
-            line_string[i] != VOID_CHAR)
+        if ((word_wrapped[i+1] != line_string[i] && line_string[i] != VOID_CHAR)
+            ||
+            direction_string[i] == direction
+            ||
+            direction_string[i] == BOTH_DIR)
         {
             fits = false;
 
@@ -164,9 +188,11 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         score = 0;
         for(i=0; i<len_word_wrapped; i++){
             //printf("ww: %c ls: %c\n",word_wrapped[i],line_string[offset + i]);
-            if (word_wrapped[i] != line_string[offset + i]
-                &&
-                line_string[offset + i] != VOID_CHAR)
+            if ((word_wrapped[i] != line_string[offset + i] && line_string[offset + i] != VOID_CHAR)
+                ||
+                direction_string[offset + i] == direction
+                ||
+                direction_string[offset + i] == BOTH_DIR)
             {
                 fits = false;
                 break;
@@ -190,9 +216,11 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     score = 0;
 
     for(i = len_line_str-len_word_wrapped+1; i<len_line_str; i++){
-        if (word_wrapped[i-(len_line_str-len_word_wrapped+1)] != line_string[i]
-            &&
-            line_string[i] != VOID_CHAR)
+        if ((word_wrapped[i-(len_line_str-len_word_wrapped+1)] != line_string[i] && line_string[i] != VOID_CHAR)
+            ||
+            direction_string[i] == direction
+            ||
+            direction_string[i] == BOTH_DIR)
         {
             fits = false;
             break;

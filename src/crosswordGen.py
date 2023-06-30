@@ -3,7 +3,7 @@ import algorythms
 import crosswordMatrix
 from defs import *
 
-def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary):
+def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
     
     usedWords = fileHandler.readUsedWords()
     for uw in usedWords:
@@ -12,7 +12,7 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
     for i in range(0,nOfCrossWordsToGenerate):
         matrix = crosswordMatrix.Matrix(width,height)
         while (matrix.countIntersections()<minimumScore):
-            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,3)#LOOK_OVER_X_TOP_WORDS)
+            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,3, c)#LOOK_OVER_X_TOP_WORDS)
         matrix.printM()
         usedWordsStr = ""
         for word in usedWords:
@@ -29,5 +29,5 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
 #generateCrosswordsAndFiles(WIDTH, HEIGHT, CROSSWORDS_TO_GENERATE, 41, DICTIONARY_FILE_NAME)
 if __name__=="__main__":
     dictionary = fileHandler.getDictionaries()
-    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary)
+    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
 # readUsedWords()

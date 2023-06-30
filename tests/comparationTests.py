@@ -1,42 +1,34 @@
+import os
+import sys
+
+currentDir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(currentDir, '../src'))
+import fileHandler
 import copy
 import random
 import crosswordMatrix
+from defs import *
 
 
-def bruteForce(width,height,dictionary,iterations):
-    mostIntersections = -1
-    bestRatio = -1
-    emptyMatrix = crosswordMatrix.Matrix(width,height)
-    bestMatrix = emptyMatrix
-    bestRatioMatrix = emptyMatrix
-    #brute forces matrix with most intersections and best ratio.
-    scores = []
-    for i in range(0,iterations):
-        random.shuffle(dictionary)
-        newMat = crosswordMatrix.Matrix(width,height)
-        newMat.createCrossword(dictionary)
-        totIntersections = newMat.countIntersections()
-        ratio = newMat.getIntersectionRatio()
-        scores.append(ratio)
-        print("iteration:",i,"total of intersections:",totIntersections,"intersection to letter ratio:",ratio)
-        if (mostIntersections < totIntersections):
-            bestMatrix = copy.deepcopy(newMat)
-            mostIntersections = totIntersections
-        if (bestRatio < ratio):
-            bestRatioMatrix = copy.deepcopy(newMat)
-            bestRatio = ratio
-    return bestMatrix,bestRatioMatrix,scores
-
-def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
+def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
 
     def calculatesFutureScore(dictionary, word, matrix):
         newMatrix = copy.deepcopy(matrix)
-        newMatrix.placeWord(word, c)
+        c_newMatrix = copy.deepcopy(matrix)
+        newMatrix.placeWord(word)
+        c_newMatrix.placeWord(word, c = True)
+        descr = newMatrix.getMatrixDescriptorStr()
+        c_descr = c_newMatrix.getMatrixDescriptorStr()
+        if(c_descr != descr):
+            print("ERRO, INCONSISTENCIA:\n Matriz:")
+            newMatrix.printM()
+            print("c_Matriz:")
+            c_newMatrix.printM()
         newDictionary = dictionary.copy()
         #remove current word of new dictionary
         newDictionary.pop(newDictionary.index(word))
         newMatrix.sortDictionaryWithScores(newDictionary)
-        newMatrix.createCrossword(newDictionary, c)
+        newMatrix.createCrossword(newDictionary)
         # score = newMatrix.getIntersectionRatio()
         score = newMatrix.countIntersections()
         return score, newMatrix
@@ -83,3 +75,32 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         #remove current word out of the dictionary
         dictionary.pop(dictionary.index(bestWord))
     return matrix, usedWords
+
+def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
+    
+    usedWords = fileHandler.readUsedWords()
+    for uw in usedWords:
+        dictionary.pop(dictionary.index(uw))
+    # dictionary = dictionary[0:100] ##########DEBUG
+    for i in range(0,nOfCrossWordsToGenerate):
+        matrix = crosswordMatrix.Matrix(width,height)
+        while (matrix.countIntersections()<minimumScore):
+            matrix, usedWords = lookAhead(width,height,dictionary,3)#LOOK_OVER_X_TOP_WORDS)
+        matrix.printM()
+        usedWordsStr = ""
+        for word in usedWords:
+            usedWordsStr += word + '\n'
+            dictionary.pop(dictionary.index(word))
+        # #create files
+        # matrixString = matrix.getMatrixString()
+        # fileHandler.saveString(matrix.getMatrixString(),OUTPUT_PATH+"\crossword"+str(i)+"\Layout.txt")
+        # fileHandler.saveString(matrix.getDirectionsString(),OUTPUT_PATH+"\crossword"+str(i)+"\Directions.txt")
+        # fileHandler.saveString(matrix.getMatrixDescriptorStr(),OUTPUT_PATH+"\crossword"+str(i)+"\Descriptor.txt")
+        # fileHandler.saveString(usedWordsStr,OUTPUT_PATH+"\crossword"+str(i)+"\Words.txt")
+
+
+#generateCrosswordsAndFiles(WIDTH, HEIGHT, CROSSWORDS_TO_GENERATE, 41, DICTIONARY_FILE_NAME)
+if __name__=="__main__":
+    dictionary = fileHandler.getDictionaries()
+    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
+# readUsedWords()
