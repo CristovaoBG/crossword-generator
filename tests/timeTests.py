@@ -9,6 +9,8 @@ currentDir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(currentDir, '../src'))
 import fileHandler
 import crosswordMatrix
+import crosswordGen
+from defs import *
 import algorythms
 
 def timeLookAheadAlg(iterations = 1):
@@ -55,10 +57,15 @@ def profile(command,locals, outputName):
     stats = pstats.Stats('outputName.prof', stream=stream)
     stats.sort_stats('cumtime')
     stats.print_stats()
-
-def dummy():
-    print("ok")
-
+    
 if __name__ == "__main__":
-    profile("dummy()", locals = locals(), outputName="ProfileOfBruteForce")
-    logPerformance()
+    dictionary = fileHandler.getDictionaries()
+    #crosswordGen.generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
+    pythonVersion = "matrix, usedWords = algorythms.lookAhead(WIDTH,HEIGHT,dictionary,3,c = False)"
+    cVersion = "matrix, usedWords = algorythms.lookAhead(WIDTH,HEIGHT,dictionary,3,c = True)"
+    #profile(cVersion, locals = locals(), outputName="cVersionProfile")
+    #profile(pythonVersion, locals = locals(), outputName="pythonVersionProfile")
+    #logPerformance()
+
+    matrix, usedWords = algorythms.lookAhead(WIDTH,HEIGHT,dictionary,3,c = False)
+    ok = 2

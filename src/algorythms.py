@@ -35,7 +35,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         newDictionary = dictionary.copy()
         #remove current word of new dictionary
         newDictionary.pop(newDictionary.index(word))
-        newMatrix.sortDictionaryWithScores(newDictionary)
+        newMatrix.sortDictionaryWithScores(newDictionary, c)
         newMatrix.createCrossword(newDictionary, c)
         # score = newMatrix.getIntersectionRatio()
         score = newMatrix.countIntersections()
@@ -48,7 +48,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
     #otimizavel (proprimeira palavra testada varias vezes)
     while True:
         print("looking for next word...")
-        matrix.sortDictionaryWithScores(dictionary)
+        matrix.sortDictionaryWithScores(dictionary, c)
         bestFutureMatrix = matrix
         bestWord = dictionary[0]
         bestScore = -1
@@ -75,7 +75,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
 
         if bestScore < 0:
             break
-        sc = matrix.placeWord(bestWord)
+        sc = matrix.placeWord(bestWord, c)
         if sc == -1:
             break
         print("selected word:",bestWord,". future score:",bestScore)

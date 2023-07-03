@@ -267,9 +267,9 @@ class Matrix:
         # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
         return score
 
-    def sortDictionaryWithScores(self,dictionary):
+    def sortDictionaryWithScores(self,dictionary, c = False):
         def getScore(str):
-            offset,pos,score = self.getBestPlace(self.__dirToggle,WORD_WRAPPER_CHAR+str+WORD_WRAPPER_CHAR)
+            offset,pos,score = self.getBestPlace(self.__dirToggle,str, c)
             return score
         dictionary.sort(key=len, reverse = True)
         dictionary.sort(key=getScore, reverse = True)
@@ -280,7 +280,7 @@ class Matrix:
         firstTime = True
         #find word with best score
         while(True):
-            self.sortDictionaryWithScores(words)
+            self.sortDictionaryWithScores(words, c)
             sc = self.placeWordDir(self.__dirToggle,words[0], c)
             if not firstTime and sc <= 0:
                 return
