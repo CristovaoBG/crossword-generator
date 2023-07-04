@@ -1,6 +1,8 @@
 import ctypes
 import random
 
+#TODO pep8
+
 ITERATIONS = 0             #brute force tries, 0 to skip. (worst, but still cool)
 LOOK_OVER_X_TOP_WORDS = 0   #look over algorythm, 0 to skip. (best)
 #special characters (flags)
@@ -271,7 +273,7 @@ class Matrix:
         def getScore(str):
             offset,pos,score = self.getBestPlace(self.__dirToggle,str, c)
             return score
-        dictionary.sort(key=len, reverse = True)
+        dictionary.sort(key=len, reverse = True) #TODO ahn? 
         dictionary.sort(key=getScore, reverse = True)
         # print(dictionary[0:10])
 

@@ -14,9 +14,14 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
 
     def calculatesFutureScore(dictionary, word, matrix):
         newMatrix = copy.deepcopy(matrix)
-        c_newMatrix = copy.deepcopy(matrix)
         newMatrix.placeWord(word)
-        c_newMatrix.placeWord(word, c = True)
+        newDictionary = dictionary.copy()
+        #remove current word of new dictionary
+        newDictionary.pop(newDictionary.index(word))
+        newMatrix.sortDictionaryWithScores(newDictionary) # acho que nao precisa dewssa linha, ele faz isso na funcao abaixo
+        c_newMatrix = copy.deepcopy(newMatrix)
+        newMatrix.createCrossword(newDictionary)
+        c_newMatrix.createCrossword(newDictionary, c=True)
         descr = newMatrix.getMatrixDescriptorStr()
         c_descr = c_newMatrix.getMatrixDescriptorStr()
         if(c_descr != descr):
@@ -24,12 +29,6 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
             newMatrix.printM()
             print("c_Matriz:")
             c_newMatrix.printM()
-        newDictionary = dictionary.copy()
-        #remove current word of new dictionary
-        newDictionary.pop(newDictionary.index(word))
-        newMatrix.sortDictionaryWithScores(newDictionary)
-        newMatrix.createCrossword(newDictionary)
-        # score = newMatrix.getIntersectionRatio()
         score = newMatrix.countIntersections()
         return score, newMatrix
 
