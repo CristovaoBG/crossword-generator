@@ -15,7 +15,7 @@ import algorythms
 
 def timeLookAheadAlg(iterations = 1):
     score = 0
-    start_time = time.time()
+    start_time = time.perf_counter()
     dictionary = fileHandler.getDictionaries()
     matrix = crosswordMatrix.Matrix(width=14,height=14)
     for i in range(iterations):
@@ -24,7 +24,7 @@ def timeLookAheadAlg(iterations = 1):
         for word in usedWords:
             dictionary.pop(dictionary.index(word))
     score/=iterations
-    return time.time()-start_time, score
+    return time.perf_counter()-start_time, score
 # readUsedWords()
 
 def timeBruteForceAlg(iterations):

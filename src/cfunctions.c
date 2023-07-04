@@ -147,6 +147,7 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     if(len_line_str < len_word_naked){
       *offset_output = -1; //? TODO corrigir isso
       *score_output = -1;
+      return;
     }
 
     // verifica no inicio
