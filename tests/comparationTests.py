@@ -39,7 +39,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
     #otimizavel (proprimeira palavra testada varias vezes)
     while True:
         print("looking for next word...")
-        matrix.sortDictionaryWithScores(dictionary)
+        dictionary = matrix.sortDictionaryWithScores(dictionary, c)
         bestFutureMatrix = matrix
         bestWord = dictionary[0]
         bestScore = -1
