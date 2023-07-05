@@ -268,29 +268,54 @@ class Matrix:
         self.applyStrAtOffset(pos,direction,strWord,offset)
         return score
 
-    def sortDictionaryWithScores(self,dictionary, c = False):
+    def sortDictionaryWithScores(self,dictionary, c = False, kick = False):
         def getScore(str):
             offset,pos,score = self.getBestPlace(self.__dirToggle,str, c)
             return score
-        dictionary.sort(key=len, reverse = True) #TODO ahn? 
-        dictionary.sort(key=getScore, reverse = True)
-        
+        dictionary.sort(key=len, reverse = True)
+        dictAndScore = [[w,getScore(w)] for w in dictionary]
+        dictAndScore.sort(key = lambda x : x[1], reverse = True)
+        if kick:
+            dictionary = [w[0] for w in dictAndScore if w[1]>=0]
+        else:
+            dictionary = [w[0] for w in dictAndScore]
+        return dictionary
+              
 
     def createCrossword(self,dictionary, c = False):
-        words = dictionary.copy()
+        vertWords = dictionary.copy()
+        horiWords = dictionary.copy()
         firstTime = True
+        doneVertical = False
+        doneHorizontal = False
         #find word with best score
-        while(True):
-            self.sortDictionaryWithScores(words, c)
-            sc = self.placeWordDir(self.__dirToggle,words[0], c)
-            if not firstTime and sc <= 0:
-                return
-            words.pop(0)
+        while(not doneVertical or not doneHorizontal):
             if (self.__dirToggle == HORI_DIR):
+                horiWords = self.sortDictionaryWithScores(horiWords, c, kick = True)
+                if horiWords:
+                    sc = self.placeWordDir(HORI_DIR,horiWords[0], c)
+                    horiWords.pop(0)
+                else:
+                    doneHorizontal = True
+                if not firstTime and sc <= 0:
+                    doneHorizontal = True
                 self.__dirToggle = VERT_DIR
-            else:
+
+            # if direction is vertical
+            else: 
+                vertWords = self.sortDictionaryWithScores(vertWords, c, kick = True)
+                if vertWords:
+                    sc = self.placeWordDir(VERT_DIR,vertWords[0], c)
+                    vertWords.pop(0)
+                else:
+                    doneVertical = True
+                if not firstTime and sc <= 0:
+                    doneVertical = True
                 self.__dirToggle = HORI_DIR
-            firstTime = False
+
+            #end of while
+            firstTime = False           
+
 
 
     def countIntersections(self): #TODO ver se vale otimizar
