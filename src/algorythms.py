@@ -45,12 +45,10 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
     print("dictionary size:",len(dictionary))
     matrix = crosswordMatrix.Matrix(width,height)
     usedWords = []
-    #TODO otimizavel (proprimeira palavra testada varias vezes)
+    #otimizavel (proprimeira palavra testada varias vezes)
     while True:
-        if not dictionary:
-            break
         print("looking for next word...")
-        dictionary = matrix.sortDictionaryWithScores(dictionary, c)
+        matrix.sortDictionaryWithScores(dictionary, c)
         bestFutureMatrix = matrix
         bestWord = dictionary[0]
         bestScore = -1

@@ -273,10 +273,7 @@ class Matrix:
             offset,pos,score = self.getBestPlace(self.__dirToggle,str, c)
             return score
         dictionary.sort(key=len, reverse = True) #TODO ahn? 
-        dictAndScore = [[w,getScore(w)] for w in dictionary]
-        dictAndScore.sort(key = lambda x:x[1], reverse = True)
-        dictionary = [w[0] for w in dictAndScore if w[1]>=0]
-        return dictionary
+        dictionary.sort(key=getScore, reverse = True)
         
 
     def createCrossword(self,dictionary, c = False):
@@ -284,9 +281,7 @@ class Matrix:
         firstTime = True
         #find word with best score
         while(True):
-            words = self.sortDictionaryWithScores(words, c)
-            if not words:
-                return
+            self.sortDictionaryWithScores(words, c)
             sc = self.placeWordDir(self.__dirToggle,words[0], c)
             if not firstTime and sc <= 0:
                 return
