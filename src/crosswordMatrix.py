@@ -282,10 +282,9 @@ class Matrix:
         return dictionary
               
 
-    def createCrossword(self,dictHori, dictVert, c = False):
+    def createCrossword(self,dictHori, dictVert, c = False, firstTime = True):
         dictionaryH = dictHori.copy()
         dictionaryV = dictVert.copy()
-        firstTime = True
         doneVertical = False
         doneHorizontal = False
         #find word with best score
@@ -294,9 +293,11 @@ class Matrix:
                 dictionaryH = self.sortDictionaryWithScores(dictionaryH, HORI_DIR, c, kick = True)
                 if dictionaryH:
                     sc = self.placeWordDir(HORI_DIR,dictionaryH[0], c)
-                    dictionaryH.pop(0)
+                    removed = dictionaryH.pop(0)
+                    if removed in dictionaryV: dictionaryV.remove(removed)
                 else:
                     doneHorizontal = True
+                    sc = -1
                 if not firstTime and sc <= 0:
                     doneHorizontal = True
                 self.__dirToggle = VERT_DIR
@@ -306,9 +307,11 @@ class Matrix:
                 dictionaryV = self.sortDictionaryWithScores(dictionaryV, VERT_DIR, c, kick = True)
                 if dictionaryV:
                     sc = self.placeWordDir(VERT_DIR,dictionaryV[0], c)
-                    dictionaryV.pop(0)
+                    removed = dictionaryV.pop(0)
+                    if removed in dictionaryH: dictionaryH.remove(removed)
                 else:
                     doneVertical = True
+                    sc = -1
                 if not firstTime and sc <= 0:
                     doneVertical = True
                 self.__dirToggle = HORI_DIR
