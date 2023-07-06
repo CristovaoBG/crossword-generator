@@ -29,14 +29,17 @@ def bruteForce(width,height,dictionary,iterations):
 
 def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
 
-    def calculatesFutureScore(dictionary, word, matrix):
+    def calculatesFutureScore(dictionaryH, dictionaryV, word, matrix):
         newMatrix = copy.deepcopy(matrix)
         newMatrix.placeWord(word, c)
-        newDictionary = dictionary.copy()
+        newDictionaryH = dictionaryH.copy()
+        newDictionaryV = dictionaryH.copy()
         #remove current word of new dictionary
-        newDictionary.pop(newDictionary.index(word))
-        newMatrix.sortDictionaryWithScores(newDictionary, c)
-        newMatrix.createCrossword(newDictionary, c)
+        if word in newDictionaryH: newDictionaryH.remove(word)
+        if word in newDictionaryV: newDictionaryV.remove(word)
+        newMatrix.sortDictionaryWithScores(newDictionaryH, crosswordMatrix.HORI_DIR, c)
+        newMatrix.sortDictionaryWithScores(newDictionaryH, crosswordMatrix.VERT_DIR, c)
+        newMatrix.createCrossword(newDictionaryH, newDictionaryV, c)
         # score = newMatrix.getIntersectionRatio()
         score = newMatrix.countIntersections()
         return score, newMatrix
@@ -46,13 +49,16 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
     matrix = crosswordMatrix.Matrix(width,height)
     usedWords = []
     #otimizavel (proprimeira palavra testada varias vezes)
+    dictionaryH = dictionary.copy()
+    dictionaryV = dictionary.copy()
     while True:
         print("looking for next word...")
-        dictionary = matrix.sortDictionaryWithScores(dictionary, c)
+        dictionaryH = matrix.sortDictionaryWithScores(dictionaryH, crosswordMatrix.HORI_DIR, c)
+        dictionaryV = matrix.sortDictionaryWithScores(dictionaryV, crosswordMatrix.VERT_DIR, c)
         bestFutureMatrix = matrix
         bestWord = dictionary[0]
         bestScore = -1
-        score,futureMatrix = calculatesFutureScore(dictionary, dictionary[0], matrix)
+        score,futureMatrix = calculatesFutureScore(dictionaryH, dictionaryV, dictionary[0], matrix)
         if ((len(dictionary[0]) == 3 and score==2)) or (len(dictionary[0]) == 2 and score==1):
             bestScore = score
             bestWord = dictionary[0]
@@ -60,7 +66,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         else:
             for word in dictionary[0:lookOverXTopWords]:
                 # calcula o melhor score futuro das cinco melhores palavras atuais
-                score,futureMatrix = calculatesFutureScore(dictionary, word, matrix)
+                score,futureMatrix = calculatesFutureScore(dictionaryH, dictionaryV, word, matrix)
                 print(score,"-> score of",word)
 
                 if score > bestScore:

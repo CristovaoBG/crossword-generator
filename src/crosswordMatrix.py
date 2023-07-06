@@ -268,9 +268,9 @@ class Matrix:
         self.applyStrAtOffset(pos,direction,strWord,offset)
         return score
 
-    def sortDictionaryWithScores(self,dictionary, c = False, kick = False):
+    def sortDictionaryWithScores(self,dictionary, direction, c = False, kick = False):
         def getScore(str):
-            offset,pos,score = self.getBestPlace(self.__dirToggle,str, c)
+            offset,pos,score = self.getBestPlace(direction, str, c)
             return score
         dictionary.sort(key=len, reverse = True)
         dictAndScore = [[w,getScore(w)] for w in dictionary]
@@ -282,19 +282,19 @@ class Matrix:
         return dictionary
               
 
-    def createCrossword(self,dictionary, c = False):
-        vertWords = dictionary.copy()
-        horiWords = dictionary.copy()
+    def createCrossword(self,dictHori, dictVert, c = False):
+        dictionaryH = dictHori.copy()
+        dictionaryV = dictVert.copy()
         firstTime = True
         doneVertical = False
         doneHorizontal = False
         #find word with best score
         while(not doneVertical or not doneHorizontal):
             if (self.__dirToggle == HORI_DIR):
-                horiWords = self.sortDictionaryWithScores(horiWords, c, kick = True)
-                if horiWords:
-                    sc = self.placeWordDir(HORI_DIR,horiWords[0], c)
-                    horiWords.pop(0)
+                dictionaryH = self.sortDictionaryWithScores(dictionaryH, HORI_DIR, c, kick = True)
+                if dictionaryH:
+                    sc = self.placeWordDir(HORI_DIR,dictionaryH[0], c)
+                    dictionaryH.pop(0)
                 else:
                     doneHorizontal = True
                 if not firstTime and sc <= 0:
@@ -303,10 +303,10 @@ class Matrix:
 
             # if direction is vertical
             else: 
-                vertWords = self.sortDictionaryWithScores(vertWords, c, kick = True)
-                if vertWords:
-                    sc = self.placeWordDir(VERT_DIR,vertWords[0], c)
-                    vertWords.pop(0)
+                dictionaryV = self.sortDictionaryWithScores(dictionaryV, VERT_DIR, c, kick = True)
+                if dictionaryV:
+                    sc = self.placeWordDir(VERT_DIR,dictionaryV[0], c)
+                    dictionaryV.pop(0)
                 else:
                     doneVertical = True
                 if not firstTime and sc <= 0:
