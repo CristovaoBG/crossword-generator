@@ -2,6 +2,7 @@ import fileHandler
 import algorythms
 import crosswordMatrix
 from defs import *
+import copy
 
 def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
     
@@ -26,8 +27,26 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
         fileHandler.saveString(usedWordsStr,OUTPUT_PATH+"\crossword"+str(i)+"\Words.txt")
 
 
+def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
+    
+    usedWords = fileHandler.readUsedWords()
+    for uw in usedWords:
+        dictionary.pop(dictionary.index(uw))
+    # dictionary = dictionary[0:100] ##########DEBUG
+    for i in range(0,nOfCrossWordsToGenerate):
+        matrix = crosswordMatrix.Matrix(width,height)
+        bestMatrix = matrix
+        history = []
+        historyMat = []
+        while (True):
+            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,10, c)#LOOK_OVER_X_TOP_WORDS)
+            history.append(matrix.countIntersections())
+            historyMat.append(copy.deepcopy(matrix))
+            if matrix.countIntersections() > bestMatrix.countIntersections():
+                bestMatrix = matrix
+
 #generateCrosswordsAndFiles(WIDTH, HEIGHT, CROSSWORDS_TO_GENERATE, 41, DICTIONARY_FILE_NAME)
 if __name__=="__main__":
     dictionary = fileHandler.getDictionaries()
-    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
+    findForever(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
 # readUsedWords()

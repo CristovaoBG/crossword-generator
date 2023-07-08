@@ -45,7 +45,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         return score, newMatrix
 
     dictionary = dictionaryOrig.copy()
-    if __debug__: dictionary = [w for w in dictionary if len(w)>2]
+    #if __debug__: dictionary = [w for w in dictionary if len(w)>2]
     print("dictionary size:",len(dictionary))
     matrix = crosswordMatrix.Matrix(width,height)
     usedWords = []
@@ -92,5 +92,5 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         #remove current word out of the dictionary
         if bestWord in dictionaryH: dictionaryH.remove(bestWord)
         if bestWord in dictionaryV: dictionaryV.remove(bestWord)
-        if __debug__: futureMatrix.printM
-    return matrix, usedWords
+        if __debug__: futureMatrix.printM()
+    return futureMatrix, usedWords
