@@ -32,7 +32,6 @@ def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary
     usedWords = fileHandler.readUsedWords()
     for uw in usedWords:
         dictionary.pop(dictionary.index(uw))
-    # dictionary = dictionary[0:100] ##########DEBUG
     for i in range(0,nOfCrossWordsToGenerate):
         matrix = crosswordMatrix.Matrix(width,height)
         bestMatrix = matrix

@@ -239,8 +239,6 @@ class Matrix:
                 offset, score = self.c_getBestPlaceInLine(i,direction,string)
             else:
                 offset, score = self.getBestPlaceInLine(i,direction,string)
-            #switch = HORI_DIR if direction == VERT_DIR else VERT_DIR
-#            c_offset, c_score = self.c_getBestPlaceInLine(i,direction,string)
             if (bestScore<score):
                 bestScore = score
                 bestPos = i
@@ -248,12 +246,10 @@ class Matrix:
         return bestOffset,bestPos,bestScore
 
     def placeWord(self,strWord, c = False):
-        #strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
         offset,pos,score = self.getBestPlace(self.__dirToggle,strWord, c)
         if(score==-1):
             return -1
         self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset)
-        # self.__dirToggle = VERT_DIR if self.__dirToggle == HORI_DIR else VERT_DIR
         if (self.__dirToggle == HORI_DIR):
             self.__dirToggle = VERT_DIR
         else:
@@ -261,7 +257,6 @@ class Matrix:
         return score
 
     def placeWordDir(self,direction,strWord, c = False):
-        #strWord = WORD_WRAPPER_CHAR + strWord + WORD_WRAPPER_CHAR
         offset,pos,score = self.getBestPlace(direction,strWord, c)
         if(score==-1):
             return -1
@@ -341,10 +336,4 @@ class Matrix:
         if (noIntersection+intersections == 0):
             return -1
         return intersections/noIntersection#(noIntersection+intersections)
-
-    def fillSpacesWithNoise(self):  # but.. why??
-        for i in range(0,self.__WIDTH):
-            for j in range(0,self.__HEIGHT):
-                if self.__matrix[i][j].getChar() == VOID_CHAR or self.__matrix[i][j].getChar() == WORD_WRAPPER_CHAR:
-                    self.__matrix[i][j].set(chr(int(random.random()*25 + 97)),NO_DIR)
 

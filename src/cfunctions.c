@@ -138,7 +138,6 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     printf("DONE! WORD WRAPPER:\"%s\"\n",word_wrapped);
     #endif
 
-    //get_line_string(width, height, matrix, line_string, 0, 'h');
     const int len_line_str = strlen(line_string);
     int offset, score, best_score = -1;
     int fits;
@@ -154,7 +153,6 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
     fits = true;
     score = 0;
     for(i=0; i<len_word_wrapped-1 && i<len_line_str; i++){
-        //printf("ww: %c ls: %c\n",word_wrapped[i+1],line_string[i]);
         if ((word_wrapped[i+1] != line_string[i] && line_string[i] != VOID_CHAR)
             ||
             direction_string[i] == direction
@@ -180,7 +178,6 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         #endif
         best_score = score;
         best_offset = 0;
-        //printf("\nFITS! score: %d offset:%d\n",score,offset);
     }
 
     //verifica no meio
@@ -193,7 +190,6 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
         fits = true;
         score = 0;
         for(i=0; i<len_word_wrapped; i++){
-            //printf("ww: %c ls: %c\n",word_wrapped[i],line_string[offset + i]);
             if ((word_wrapped[i] != line_string[offset + i] && line_string[offset + i] != VOID_CHAR)
                 ||
                 direction_string[offset + i] == direction
@@ -205,8 +201,7 @@ void c_best_place_in_line(int height, int width, char direction, char* word, cha
             }
             // else
             if (line_string[offset + i] != VOID_CHAR && line_string[offset + i] != WORD_WRAPPER_CHAR){
-                score++; // intersection counter
-                //printf("---3---");
+                score++;
             }
         }
         if(fits && score>best_score){
