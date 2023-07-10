@@ -5,7 +5,17 @@ from defs import *
 # WIDTH = 20
 # HEIGHT = 30
 
-
+def readDictionaryFiles(path):
+    output = []
+    for fileName in os.listdir(path):
+        filePath = os.path.join(path, fileName)
+        if os.path.isfile(filePath):
+            with open(filePath, 'r') as file:
+                for line in file:
+                    words = line.split()
+                    if(words):
+                        output.append(words[0])
+    return output    
 
 def openDictionary(filename):
     dictionary = []
@@ -16,22 +26,6 @@ def openDictionary(filename):
     dictionary.sort(key = rand)
     return dictionary
 
-# dictionary = openDictionary(DICTIONARY_FILE_NAME)
-#
-# # Calls brute force algorythm
-# if(ITERATIONS > 0):
-#     bestMatrix,bestRatioMatrix,allScores = bruteForceAlgorythm(WIDTH,HEIGHT,dictionary)
-#     print("Matrix with most intersections =",bestMatrix.countIntersections(),", ratio =",bestMatrix.getIntersectionRatio())
-#     bestMatrix.printM()
-#     print("Matrix with best ratio =",bestRatioMatrix.countIntersections(),", ratio =",bestRatioMatrix.getIntersectionRatio())
-#     bestRatioMatrix.printM()
-# # bestRatioMatrix.printDirections()
-#
-# # Calls look ahead algorythm
-# if(LOOK_OVER_X_TOP_WORDS > 0):
-#     matrix, usedWords = lookAheadAlgorythm(WIDTH,HEIGHT,dictionary)
-#     matrix.printM()
-#
 def saveString(string, fileName):
     textFile = open(fileName, "w")
     n = textFile.write(string)
@@ -63,4 +57,5 @@ def readUsedWords():
     return usedWords
 
 def getDictionaries():
-    return openDictionary(INPUT_PATH + "/" + DICTIONARY_FILE_NAME)
+    #return openDictionary(INPUT_PATH + "/" + DICTIONARY_FILE_NAME)
+    return readDictionaryFiles(".\\data\\input")
