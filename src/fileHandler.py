@@ -27,9 +27,10 @@ def openDictionary(filename):
     return dictionary
 
 def saveString(string, fileName):
-    textFile = open(fileName, "w")
-    n = textFile.write(string)
-    textFile.close()
+    os.makedirs(os.path.dirname(fileName), exist_ok = True)
+    with open(fileName, "w") as textFile:
+        n = textFile.write(string)
+    return n
 
 def readUsedWords():
     currentPath = os. getcwd()

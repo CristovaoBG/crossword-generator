@@ -47,5 +47,8 @@ def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary
 #generateCrosswordsAndFiles(WIDTH, HEIGHT, CROSSWORDS_TO_GENERATE, 41, DICTIONARY_FILE_NAME)
 if __name__=="__main__":
     dictionary = fileHandler.getDictionaries()
-    findForever(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
+
+    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=3, minimumScore=33, dictionary=dictionary, c = True)
+
+
 # readUsedWords()
