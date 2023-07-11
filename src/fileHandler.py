@@ -15,7 +15,9 @@ def readDictionaryFiles(path):
                     words = line.split()
                     if(words):
                         output.append(words[0])
-    return output    
+    # remove duplicates
+    output = list(set(output))
+    return output 
 
 def openDictionary(filename):
     dictionary = []
