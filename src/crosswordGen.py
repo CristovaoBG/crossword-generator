@@ -12,7 +12,7 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
     for i in range(0,nOfCrossWordsToGenerate):
         matrix = crosswordMatrix.Matrix(width,height)
         while (matrix.countIntersections()<minimumScore):
-            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,7, c)#LOOK_OVER_X_TOP_WORDS)
+            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,50, c)#LOOK_OVER_X_TOP_WORDS)
         matrix.printM(" "," ")
         usedWordsStr = ""
         for word in usedWords:
