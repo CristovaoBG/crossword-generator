@@ -27,7 +27,7 @@ def bruteForce(width,height,dictionary,iterations):
             bestRatio = ratio
     return bestMatrix,bestRatioMatrix,scores
 
-def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
+def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c=False):
 
     def calculatesFutureScore(dictionaryH, dictionaryV, word, matrix):
         newMatrix = copy.deepcopy(matrix)
@@ -37,9 +37,12 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         #remove current word of new dictionary
         if word in newDictionaryH: newDictionaryH.remove(word)
         if word in newDictionaryV: newDictionaryV.remove(word)
-        newMatrix.sortDictionaryWithScores(newDictionaryH, crosswordMatrix.HORI_DIR, c)
-        newMatrix.sortDictionaryWithScores(newDictionaryV, crosswordMatrix.VERT_DIR, c)
-        newMatrix.createCrossword(newDictionaryH, newDictionaryV, c, firstTime = False)
+        newMatrix.sortDictionaryWithScores(newDictionaryH,
+                                           crosswordMatrix.HORI_DIR, c)
+        newMatrix.sortDictionaryWithScores(newDictionaryV,
+                                           crosswordMatrix.VERT_DIR, c)
+        newMatrix.createCrossword(newDictionaryH, newDictionaryV,
+                                  c, firstTime = False)
         # score = newMatrix.getIntersectionRatio()
         score = newMatrix.countIntersections()
         return score, newMatrix
@@ -54,8 +57,12 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
     dictionaryV = dictionary.copy()
     while True:
         print("looking for next word...")
-        dictionaryH = matrix.sortDictionaryWithScores(dictionaryH, crosswordMatrix.HORI_DIR, c)
-        dictionaryV = matrix.sortDictionaryWithScores(dictionaryV, crosswordMatrix.VERT_DIR, c)
+        dictionaryH = matrix.sortDictionaryWithScores(dictionaryH,
+                                                      crosswordMatrix.HORI_DIR,
+                                                      c)
+        dictionaryV = matrix.sortDictionaryWithScores(dictionaryV,
+                                                      crosswordMatrix.VERT_DIR,
+                                                      c)
         bestFutureMatrix = matrix
         
         d = dictionaryH if matrix.getCurrentDir() == crosswordMatrix.HORI_DIR else dictionaryV
@@ -65,22 +72,25 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         if ((len(d[0]) == 3 and score==2)) or (len(d[0]) == 2 and score==1):
             bestScore = score
             bestWord = d[0]
-            #bestFutureMatrix = copy.deepcopy(futureMatrix)
+            bestFutureMatrix = copy.deepcopy(futureMatrix)
         else:
             for word in d[0:lookOverXTopWords if len(d) > lookOverXTopWords else len(d)]:
                 # calcula o melhor score futuro das cinco melhores palavras atuais
-                score,futureMatrix = calculatesFutureScore(dictionaryH, dictionaryV, word, matrix)
+                score,futureMatrix = calculatesFutureScore(dictionaryH,
+                                                           dictionaryV,
+                                                           word,
+                                                           matrix)
                 print(score,"-> score of",word)
 
                 if score > bestScore:
                     bestScore = score
                     bestWord = word
-                    #bestFutureMatrix = copy.deepcopy(futureMatrix)
+                    bestFutureMatrix = copy.deepcopy(futureMatrix)
                 #adds a little bit of impredictibility
                 elif score == bestScore and random.random() >= 0.5:
                     bestScore = score
                     bestWord = word
-                    #bestFutureMatrix = copy.deepcopy(futureMatrix)
+                    bestFutureMatrix = copy.deepcopy(futureMatrix)
 
         if bestScore < 0:
             break
@@ -92,5 +102,5 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords, c = False):
         #remove current word out of the dictionary
         if bestWord in dictionaryH: dictionaryH.remove(bestWord)
         if bestWord in dictionaryV: dictionaryV.remove(bestWord)
-        if __debug__: futureMatrix.printM(' ',' ')
+        if __debug__: bestFutureMatrix.printM(' ',' ')
     return futureMatrix, usedWords

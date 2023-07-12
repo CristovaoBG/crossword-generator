@@ -12,7 +12,7 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
     for i in range(0,nOfCrossWordsToGenerate):
         matrix = crosswordMatrix.Matrix(width,height)
         while (matrix.countIntersections()<minimumScore):
-            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,5, c)#LOOK_OVER_X_TOP_WORDS)
+            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,7, c)#LOOK_OVER_X_TOP_WORDS)
         matrix.printM(" "," ")
         usedWordsStr = ""
         for word in usedWords:
@@ -21,11 +21,11 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
         #create files
         matrixString = matrix.getMatrixString()
         offset = 0
-        while(os.path.isfile(OUTPUT_PATH+"\crossword"+str(offset)+"\Descriptor.txt")): offset+=1
+        while(os.path.isfile(OUTPUT_PATH+"\crossword"+str(offset+i)+"\Descriptor.txt")): offset += 1
         fileHandler.saveString(matrix.getMatrixString(),OUTPUT_PATH+"\crossword"+str(i+offset)+"\Layout.txt")
         fileHandler.saveString(matrix.getDirectionsString(),OUTPUT_PATH+"\crossword"+str(i+offset)+"\Directions.txt")
         fileHandler.saveString(matrix.getMatrixDescriptorStr(),OUTPUT_PATH+"\crossword"+str(i+offset)+"\Descriptor.txt")
-        fileHandler.saveString(usedWordsStr,OUTPUT_PATH+"\crossword"+str(i)+"\Words.txt")
+        fileHandler.saveString(usedWordsStr,OUTPUT_PATH+"\crossword"+str(i+offset)+"\Words.txt")
 
 
 def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
@@ -39,7 +39,7 @@ def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary
         history = []
         historyMat = []
         while (True):
-            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,10, c)#LOOK_OVER_X_TOP_WORDS)
+            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,37, c)#LOOK_OVER_X_TOP_WORDS)
             history.append(matrix.countIntersections())
             historyMat.append(copy.deepcopy(matrix))
             if matrix.countIntersections() > bestMatrix.countIntersections():
