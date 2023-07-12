@@ -35,27 +35,20 @@ def saveString(string, fileName):
     return n
 
 def readUsedWords():
-    currentPath = os. getcwd()
-    currentPath += "\\crosswords"
+    currentPath = os.getcwd()
+    currentPath += "\\data\\output"
     filesPath = []
     for r, d, f in os.walk(currentPath):
         for file in f:
-            if '.txt' in file:
+            if 'Words' in file:
                 filesPath.append(os.path.join(r, file))
-    #get all words files only
-    wordsFilesPaths = []
-    for path in filesPath:
-        fileName = path.split('\\')[-1]
-        if(fileName.find("Words") > 0):
-            wordsFilesPaths.append(path)
-            print(fileName)
     #readAllWords
     usedWords = []
-    for f in wordsFilesPaths:
+    for f in filesPath:
         with open(f) as file:
              words = file.read().split('\n')
         for word in words:
-            if (len(word)>0):
+            if (word != ""):
                 usedWords.append(word)
     return usedWords
 
