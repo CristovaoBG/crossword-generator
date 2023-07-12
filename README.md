@@ -84,30 +84,22 @@ rad
 ##### Descriptor file:
 The first two numbers of each line of the descriptor indicates the X and Y origin of the given word, then the following character (before the actual word) indicates if the word is oriented in the vertically ("|") or horizontally ("-").
 ```
-0 0 | individualismo
-0 0 - incandescencia
-6 0 | espectroscopia
-0 6 - desnutricao
-8 0 | coerencia
-0 12 - microbiota
-4 4 | leucocitos
-3 8 - poesia
-10 0 | nervoso
-4 10 - isometrica
-12 0 | independencia
-8 2 - enredo
-2 0 | catalise
-10 8 - opep
-2 9 | etica
-11 12 - rad
-8 10 | este
-6 4 - clero
-10 8 | ouro
-0 4 - vel
-4 0 | na
-0 2 - dst
-0 8 - al
-12 4 - pi
+individualismo
+incandescencia
+espectroscopia
+desnutricao
+coerencia
+microbiota
+leucocitos
+poesia
+nervoso
+isometrica
+independencia
+enredo
+catalise
+opep
+etica
+rad
 ```
 
 Scpecial characters that indicates direction, end of word and blank spaces can easily be changed in the code.
