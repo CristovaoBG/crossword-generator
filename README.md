@@ -27,96 +27,83 @@ Three types of output are generated for every generated crossword:
 ### Output example
 for a given dictionary set of words in the input folder, a typical output for it would look something like the following, for a 14/14 crossword:
 ##### Words file:
-``` contemporanea
-eletroquimica
-perpendicular
-agropecuaria
-hidrografia
-capitalismo
-dissertacao
-coplanares
-procarionte
-narracao
-teatro
-celular
-lua
-raio
-pac
-aves
-vol
-pol
-os
-pa
-pi
-gene
-sr
-ds
-ldc
+``` individualismo
+incandescencia
+espectroscopia
+desnutricao
+coerencia
+microbiota
+leucocitos
+poesia
+nervoso
+isometrica
+independencia
+enredo
+catalise
+opep
+etica
+rad
 ```
 ##### Layout file:
 |||||||||||||||
 |------|------|------|------|------|------|------|------|------|------|------|------|------|------|
-|C|A|P|I|T|A|L|I|S|M|O|.|P|A|
-|O| |E| |E| |U| |R| |S| |R| |
-|N|A|R|R|A|C|A|O|.| |.|P|O|L|
-|T| |P| |T| |.| |D| |H| |C| |
-|E|L|E|T|R|O|Q|U|I|M|I|C|A|.|
-|M| |N| |O| |.| |S| |D| |R| |
-|P|.|D|S|.|A|V|E|S|.|R|A|I|O|
-|O| |I| |.| |O| |E| |O| |O| |
-|R|.|C|E|L|U|L|A|R|.|G|E|N|E|
-|A| |U| |D| |.| |T| |R| |T| |
-|N| |L|.|C|O|P|L|A|N|A|R|E|S|
-|E| |A| |.| |A| |C| |F| |.| |
-|A|G|R|O|P|E|C|U|A|R|I|A|.| |
-|.| |.| |I| |.| |O| |A| | | |
+|I|N|D|I|V|I|D|U|A|L|I|S|M|O|
+|N| |S| |E| |E| |L| | | |I| |
+|C|A|T|A|L|I|S|E| |E|T|I|C|A|
+|A| | | | | |N| |P| | | |R| |
+|N|A| | |L|E|U|C|O|C|I|T|O|S|
+|D| | | | | |T| |E| |S| |B| |
+|E|S|P|E|C|T|R|O|S|C|O|P|I|A|
+|S| | | |L| |I| |I| |M| |O| |
+|C|O|E|R|E|N|C|I|A| |E|S|T|E|
+|E| |N| |R| |A| | | |T| |A| |
+|N|E|R|V|O|S|O| |O|U|R|O| | |
+|C| |E| | | | | |P| |I| |R| |
+|I|N|D|E|P|E|N|D|E|N|C|I|A| |
+|A| |O| |I| | | |P| |A| |D| |
 
 ##### Directions file:
 |||||||||||||||
 |------|------|------|------|------|------|------|------|------|------|------|------|------|------|
-+|-|+|-|+|-|+|-|+|-|+| |+|-|
-|\||| |\||| |\||| |\||| |\||| |\||| |\||| |
-|+|-|+|-|+|-|+|-| | | |-|+|-|
-|\||| |\||| |\||| | | |\||| |\||| |\||| |
-|+|-|+|-|+|-|-|-|+|-|+|-|+| |
-|\||| |\||| |\||| | | |\||| |\||| |\||| |
-|\||| |+|-| |-|+|-|+| |+|-|+|-|
-|\||| |\||| | | |\||| |\||| |\||| |\||| |
-|\||| |+|-|+|-|+|-|+| |+|-|+|-|
-|\||| |\||| |\||| | | |\||| |\||| |\||| |
-|\||| |\||| |+|-|+|-|+|-|+|-|+|-|
-|\||| |\||| | | |\||| |\||| |\||| | | |
-|+|-|+|-|+|-|+|-|+|-|+|-| | |
-| | | | |\||| | | |\||| |\||| | | |
+|+|─|+|─|+|─|+|─|+|─|─|─|+|─|
+|\|| |\|| |\| ||\|| |\|| | | |\| |
+|+|─|+|─|+|─|+|─| |─|─|─|+|─|
+|\| | | | | ||\|| |\|| | | |\| |
+|+|─| | |─|─|+|─|+|─|+|─|+|─|
+|\| | | | | ||\|| |\|| |\|| |\| |
+|+|─|─|─|+|─|+|─|+|─|+|─|+|─|
+|\|| | | |\|| |\|| |\|| |\|| |\| ||
+|+|─|+|─|+|─|+|─|+| |+|─|+|─|
+|\|| |\|| |\|| |\|| | | |\|| |\|| |
+|+|─|+|─|+|─|+| |+|─|+|─| | |
+|\|| |\|| | | | | |\|| |\|| |\|| |
+|+|─|+|─|+|─|─|─|+|─|+|─|+| |
+|\|| |\|| |\|| | | |\|| |\|| |\|| |
 
 ##### Descriptor file:
 The first two numbers of each line of the descriptor indicates the X and Y origin of the given word, then the following character (before the actual word) indicates if the word is oriented in the vertically ("|") or horizontally ("-").
 ```
-0 0 | contemporanea
-0 4 - eletroquimica
-2 0 | perpendicular
-0 12 - agropecuaria
-10 3 | hidrografia
-0 0 - capitalismo
-8 3 | dissertacao
-4 10 - coplanares
-12 0 | procarionte
-0 2 - narracao
-4 0 | teatro
-2 8 - celular
-6 0 | lua
-10 6 - raio
-6 10 | pac
-5 6 - aves
-6 6 | vol
-11 2 - pol
-10 0 | os
-12 0 - pa
-4 12 | pi
-10 8 - gene
-8 0 | sr
-2 6 - ds
-4 8 | ldc
+0 0 | parnasianismo
+0 8 - nacionalizacao
+2 0 | classificacao
+0 4 - absolutismo
+6 2 | tetravalente
+0 10 - socrates
+10 0 | fosforilacao
+0 6 - infeccao
+4 0 | titulacao
+2 12 - orbital
+12 0 | carboidratos
+2 0 - cations
+8 7 | pio
+6 2 - tan
+8 0 | senos
+9 10 - calor
+8 11 | ele
+10 0 - foco
+9 6 - bird
+0 2 - rna
+10 2 - ser
 ```
 
 Scpecial characters that indicates direction, end of word and blank spaces can easily be changed in the code.
