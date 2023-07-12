@@ -43,6 +43,7 @@ catalise
 opep
 etica
 rad
+
 ```
 ##### Layout file:
 |||||||||||||||
@@ -83,27 +84,30 @@ rad
 ##### Descriptor file:
 The first two numbers of each line of the descriptor indicates the X and Y origin of the given word, then the following character (before the actual word) indicates if the word is oriented in the vertically ("|") or horizontally ("-").
 ```
-0 0 | parnasianismo
-0 8 - nacionalizacao
-2 0 | classificacao
-0 4 - absolutismo
-6 2 | tetravalente
-0 10 - socrates
-10 0 | fosforilacao
-0 6 - infeccao
-4 0 | titulacao
-2 12 - orbital
-12 0 | carboidratos
-2 0 - cations
-8 7 | pio
-6 2 - tan
-8 0 | senos
-9 10 - calor
-8 11 | ele
-10 0 - foco
-9 6 - bird
-0 2 - rna
-10 2 - ser
+0 0 | individualismo
+0 0 - incandescencia
+6 0 | espectroscopia
+0 6 - desnutricao
+8 0 | coerencia
+0 12 - microbiota
+4 4 | leucocitos
+3 8 - poesia
+10 0 | nervoso
+4 10 - isometrica
+12 0 | independencia
+8 2 - enredo
+2 0 | catalise
+10 8 - opep
+2 9 | etica
+11 12 - rad
+8 10 | este
+6 4 - clero
+10 8 | ouro
+0 4 - vel
+4 0 | na
+0 2 - dst
+0 8 - al
+12 4 - pi
 ```
 
 Scpecial characters that indicates direction, end of word and blank spaces can easily be changed in the code.
