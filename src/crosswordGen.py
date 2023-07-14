@@ -5,6 +5,9 @@ from defs import *
 import copy
 import os
 
+# TODO: Corrigir bug para palavras grandes demais, nao deveriam ser processadas
+
+
 def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
     usedWords = fileHandler.readUsedWords()
     dictionary = [d for d in dictionary if d not in usedWords]
@@ -21,11 +24,17 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
         #create files
         matrixString = matrix.getMatrixString()
         offset = 0
-        while(os.path.isfile(OUTPUT_PATH+"\crossword"+str(offset+i)+"\Descriptor.txt")): offset += 1
-        fileHandler.saveString(matrix.getMatrixString(),OUTPUT_PATH+"\crossword"+str(i+offset)+"\Layout.txt")
-        fileHandler.saveString(matrix.getDirectionsString(),OUTPUT_PATH+"\crossword"+str(i+offset)+"\Directions.txt")
-        fileHandler.saveString(matrix.getMatrixDescriptorStr(),OUTPUT_PATH+"\crossword"+str(i+offset)+"\Descriptor.txt")
-        fileHandler.saveString(usedWordsStr,OUTPUT_PATH+"\crossword"+str(i+offset)+"\Words.txt")
+        while(os.path.isfile(OUTPUT_PATH+"\crossword"+str(offset+i)+"\Descriptor.txt")):
+            offset += 1
+        # TODO: remover formato feio das strings abaixo, usar f{}
+        fileHandler.saveString(matrix.getMatrixString(),
+                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Layout.txt")
+        fileHandler.saveString(matrix.getDirectionsString(),
+                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Directions.txt")
+        fileHandler.saveString(matrix.getMatrixDescriptorStr(),
+                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Descriptor.txt")
+        fileHandler.saveString(usedWordsStr,
+                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Words.txt")
 
 
 def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
@@ -49,7 +58,7 @@ def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary
 if __name__=="__main__":
     dictionary = fileHandler.getDictionaries()
 
-    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=15, minimumScore=37, dictionary=dictionary, c = True)
+    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=15, minimumScore=40, dictionary=dictionary, c = True)
 
 
 # readUsedWords()
