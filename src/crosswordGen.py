@@ -8,57 +8,53 @@ import os
 # TODO: Corrigir bug para palavras grandes demais, nao deveriam ser processadas
 
 
-def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
-    usedWords = fileHandler.readUsedWords()
-    dictionary = [d for d in dictionary if d not in usedWords]
+def generate_crosswords_and_files(width, height, n_of_crosswords_to_generate, minimum_score, dictionary, c = False):
+    used_words = fileHandler.read_used_words()
+    dictionary = [d for d in dictionary if d not in used_words]
     # dictionary = dictionary[0:100] ##########DEBUG
-    for i in range(0,nOfCrossWordsToGenerate):
+    for i in range(0,n_of_crosswords_to_generate):
         matrix = crosswordMatrix.Matrix(width,height)
-        while (matrix.countIntersections()<minimumScore):
-            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,50, c)#LOOK_OVER_X_TOP_WORDS)
+        while (matrix.count_intersections()<minimum_score):
+            matrix, used_words = algorythms.look_ahead(width,height,dictionary,10, c)#LOOK_OVER_X_TOP_WORDS)
         matrix.printM(" "," ")
-        usedWordsStr = ""
-        for word in usedWords:
-            usedWordsStr += word + '\n'
+        used_words_str = ""
+        for word in used_words:
+            used_words_str += word + '\n'
             dictionary.pop(dictionary.index(word))
         #create files
-        matrixString = matrix.getMatrixString()
+        matrixString = matrix.get_matrix_string()
         offset = 0
         while(os.path.isfile(OUTPUT_PATH+"\crossword"+str(offset+i)+"\Descriptor.txt")):
             offset += 1
         # TODO: remover formato feio das strings abaixo, usar f{}
-        fileHandler.saveString(matrix.getMatrixString(),
+        fileHandler.save_string(matrix.get_matrix_string(),
                                OUTPUT_PATH+"\crossword"+str(i+offset)+"\Layout.txt")
-        fileHandler.saveString(matrix.getDirectionsString(),
+        fileHandler.save_string(matrix.get_directions_string(),
                                OUTPUT_PATH+"\crossword"+str(i+offset)+"\Directions.txt")
-        fileHandler.saveString(matrix.getMatrixDescriptorStr(),
+        fileHandler.save_string(matrix.get_matrix_descriptor_str(),
                                OUTPUT_PATH+"\crossword"+str(i+offset)+"\Descriptor.txt")
-        fileHandler.saveString(usedWordsStr,
+        fileHandler.save_string(used_words_str,
                                OUTPUT_PATH+"\crossword"+str(i+offset)+"\Words.txt")
 
 
-def findForever(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
+def find_forever(width, height, n_of_crosswords_to_generate, minimum_score, dictionary, c = False):
     
-    usedWords = fileHandler.readUsedWords()
-    for uw in usedWords:
+    used_words = fileHandler.read_used_words()
+    for uw in used_words:
         dictionary.pop(dictionary.index(uw))
-    for i in range(0,nOfCrossWordsToGenerate):
+    for i in range(0,n_of_crosswords_to_generate):
         matrix = crosswordMatrix.Matrix(width,height)
-        bestMatrix = matrix
+        best_matrix = matrix
         history = []
-        historyMat = []
+        history_mat = []
         while (True):
-            matrix, usedWords = algorythms.lookAhead(width,height,dictionary,37, c)#LOOK_OVER_X_TOP_WORDS)
-            history.append(matrix.countIntersections())
-            historyMat.append(copy.deepcopy(matrix))
-            if matrix.countIntersections() > bestMatrix.countIntersections():
-                bestMatrix = matrix
+            matrix, used_words = algorythms.look_ahead(width,height,dictionary,37, c)#LOOK_OVER_X_TOP_WORDS)
+            history.append(matrix.count_intersections())
+            history_mat.append(copy.deepcopy(matrix))
+            if matrix.count_intersections() > best_matrix.count_intersections():
+                best_matrix = matrix
 
-#generateCrosswordsAndFiles(WIDTH, HEIGHT, CROSSWORDS_TO_GENERATE, 41, DICTIONARY_FILE_NAME)
 if __name__=="__main__":
-    dictionary = fileHandler.getDictionaries()
+    dictionary = fileHandler.get_dictionaries()
 
-    generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=15, minimumScore=40, dictionary=dictionary, c = True)
-
-
-# readUsedWords()
+    generate_crosswords_and_files(width=WIDTH, height=HEIGHT, n_of_crosswords_to_generate=15, minimum_score=40, dictionary=dictionary, c = True)

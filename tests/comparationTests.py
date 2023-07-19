@@ -39,7 +39,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
     #otimizavel (proprimeira palavra testada varias vezes)
     while True:
         print("looking for next word...")
-        dictionary = matrix.sortDictionaryWithScores(dictionary, c)
+        dictionary = matrix.sort_dictionary_with_scores(dictionary, c)
         bestFutureMatrix = matrix
         bestWord = dictionary[0]
         bestScore = -1
@@ -66,7 +66,7 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
 
         if bestScore < 0:
             break
-        sc = matrix.placeWord(bestWord)
+        sc = matrix.place_word(bestWord)
         if sc == -1:
             break
         print("selected word:",bestWord,". future score:",bestScore)
@@ -77,13 +77,13 @@ def lookAhead(width,height,dictionaryOrig,lookOverXTopWords):
 
 def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumScore, dictionary, c = False):
     
-    usedWords = fileHandler.readUsedWords()
+    usedWords = fileHandler.read_used_words()
     for uw in usedWords:
         dictionary.pop(dictionary.index(uw))
     # dictionary = dictionary[0:100] ##########DEBUG
     for i in range(0,nOfCrossWordsToGenerate):
         matrix = crosswordMatrix.Matrix(width,height)
-        while (matrix.countIntersections()<minimumScore):
+        while (matrix.count_intersections()<minimumScore):
             matrix, usedWords = lookAhead(width,height,dictionary,3)#LOOK_OVER_X_TOP_WORDS)
         matrix.printM()
         usedWordsStr = ""
@@ -100,6 +100,6 @@ def generateCrosswordsAndFiles(width, height, nOfCrossWordsToGenerate, minimumSc
 
 #generateCrosswordsAndFiles(WIDTH, HEIGHT, CROSSWORDS_TO_GENERATE, 41, DICTIONARY_FILE_NAME)
 if __name__=="__main__":
-    dictionary = fileHandler.getDictionaries()
+    dictionary = fileHandler.get_dictionaries()
     generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
 # readUsedWords()

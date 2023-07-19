@@ -32,7 +32,7 @@ c_best_place_in_line.restype = None
 
 class Matrix:
 
-    def getMatrixDescriptorStr(self):
+    def get_matrix_descriptor_str(self):
         string = ""
         for w in self.words:
             string += str(w.x) + " " + str(w.y) + " " +  w.direction + " " + w.string + "\n"
@@ -56,9 +56,9 @@ class Matrix:
                 self.__direction = direction
             else:
                 self.__direction = BOTH_DIR
-        def getChar(self):
+        def get_char(self):
             return self.__letter
-        def getDir(self):
+        def get_dir(self):
             return self.__direction
 
     def __init__(self, width,height):
@@ -66,35 +66,35 @@ class Matrix:
         self.__WIDTH = width
         self.__HEIGHT = height
         self.__matrix = []
-        self.__dirToggle = VERT_DIR
+        self.__dir_toggle = VERT_DIR
         self.words = []
         #create empty matrix
         for column in range(0,width):
-            matrixLine = []
+            matrix_line = []
             for row in range(0,height):
-                matrixLine.append(self.Block())
-            self.__matrix.append(matrixLine)
-    def getCurrentDir(self):
-        return self.__dirToggle
+                matrix_line.append(self.Block())
+            self.__matrix.append(matrix_line)
+    def get_current_dir(self):
+        return self.__dir_toggle
 
-    def getMatrixString(self):
+    def get_matrix_string(self):
         string = ""
         for i in range(0,self.__HEIGHT):
             for j in range(self.__WIDTH):
-                string += self.__matrix[i][j].getChar()# + " "
+                string += self.__matrix[i][j].get_char()# + " "
             string +="\n"
         return string
 
-    def printM(self,wordWrapper = WORD_WRAPPER_CHAR, voidChar = VOID_CHAR):
-        string = self.getMatrixString()
-        string = string.replace(WORD_WRAPPER_CHAR,wordWrapper)
-        string = string.replace(VOID_CHAR,voidChar)
-        printStr = ""
+    def printM(self,word_wrapper = WORD_WRAPPER_CHAR, void_char = VOID_CHAR):
+        string = self.get_matrix_string()
+        string = string.replace(WORD_WRAPPER_CHAR,word_wrapper)
+        string = string.replace(VOID_CHAR,void_char)
+        print_str = ""
         for i in range(0,len(string)):
-            printStr += " " + string[i]
-        print(printStr)
+            print_str += " " + string[i]
+        print(print_str)
 
-    def getDirectionsString(self):
+    def get_directions_string(self):
         str = ""
         for i in range(0,self.__HEIGHT):
             for j in range(self.__WIDTH):
@@ -102,103 +102,103 @@ class Matrix:
             str +="\n"
         return str
     #otimizavel essas duas (combinaveis como a printM e getMatrixString)
-    def printDirections(self):
+    def print_directions(self):
         str = ""
         for i in range(0,self.__HEIGHT):
             for j in range(self.__WIDTH):
-                str += self.__matrix[j][i].getDir() + " "
+                str += self.__matrix[j][i].get_dir() + " "
             str +="\n"
         print(str)
 
-    def setChar(self,char,posx,posy):
+    def set_char(self,char,posx,posy):
         self.__matrix[posy][posx].set(char,NO_DIR)
 
-    def c_getBestPlaceInLine(self, line, direction, string):
+    def c_get_best_place_in_line(self, line, direction, string):
         c_line = ctypes.c_int(line)
         c_height = ctypes.c_int(self.__HEIGHT)
         c_width = ctypes.c_int(self.__WIDTH)
         c_direction = ctypes.c_char(b'h' if direction==HORI_DIR else b'v')
         c_word = ctypes.create_string_buffer(string.encode('utf-8'))
-        c_matrix_string = ctypes.create_string_buffer(self.getMatrixDescriptorStr().encode('utf-8'))
+        c_matrix_string = ctypes.create_string_buffer(self.get_matrix_descriptor_str().encode('utf-8'))
         c_best_offset = ctypes.c_int(-1)
         c_intersection_count = ctypes.c_int(-1)
         c_best_place_in_line(c_height,c_width,c_direction,c_word,c_matrix_string,c_line,ctypes.byref(c_best_offset),ctypes.byref(c_intersection_count))
         return c_best_offset.value, c_intersection_count.value
 
 
-    def getBestPlaceInLine(self, line, direction, string):
+    def get_best_place_in_line(self, line, direction, string):
         string = WORD_WRAPPER_CHAR + string + WORD_WRAPPER_CHAR
         #convert line to string
-        lineStr = ""
-        lineDirStr = ""
+        line_str = ""
+        line_dir_str = ""
         if direction == HORI_DIR:
             for i in range(0,self.__WIDTH):
-                lineStr += self.__matrix[i][line].getChar()
-                lineDirStr += self.__matrix[i][line].getDir()
-            lineStrLen = self.__WIDTH
+                line_str += self.__matrix[i][line].get_char()
+                line_dir_str += self.__matrix[i][line].get_dir()
+            line_str_len = self.__WIDTH
         else:
             for i in range(0,self.__HEIGHT):
-                lineStr += self.__matrix[line][i].getChar()
-                lineDirStr += self.__matrix[line][i].getDir()
-            lineStrLen = self.__HEIGHT
-        stringLen = len(string)
-        if stringLen > lineStrLen + 2: #doesn't fit at all
+                line_str += self.__matrix[line][i].get_char()
+                line_dir_str += self.__matrix[line][i].get_dir()
+            line_str_len = self.__HEIGHT
+        string_len = len(string)
+        if string_len > line_str_len + 2: #doesn't fit at all
             return -1,-1
         #check if fits at the start
         intersections = 0
-        bestOffset = -1
-        bestOffsetIntersections = -1
+        best_offset = -1
+        best_offset_intersections = -1
         fits = True
-        for i in range(0,stringLen-1):
+        for i in range(0,string_len-1):
             #check for vaccancy and for collisions
-            if(i==lineStrLen and string[i+1]): #check if is last position
+            if(i==line_str_len and string[i+1]): #check if is last position
                 continue
-            if (string[i+1]!=lineStr[i] and lineStr[i]!=VOID_CHAR) or lineDirStr[i] == direction or lineDirStr[i] == BOTH_DIR:
+            if (string[i+1]!=line_str[i] and line_str[i]!=VOID_CHAR) or line_dir_str[i] == direction or line_dir_str[i] == BOTH_DIR:
                 fits = False
                 break
             #else
-            if lineStr[i]!=VOID_CHAR and lineStr[i]!=WORD_WRAPPER_CHAR:
+            if line_str[i]!=VOID_CHAR and line_str[i]!=WORD_WRAPPER_CHAR:
                 intersections += 1
         if fits:
-            bestOffset = -1
-            bestOffsetIntersections = intersections
+            best_offset = -1
+            best_offset_intersections = intersections
             #check if fits at middle
         offset = 0
-        while offset + stringLen <= lineStrLen:
+        while offset + string_len <= line_str_len:
             #compare every character
             fits = True
             intersections = 0
-            for i in range(0,stringLen):
+            for i in range(0,string_len):
                 #check for vaccancy and for collisions
-                if (string[i]!=lineStr[i+offset] and lineStr[i+offset]!=VOID_CHAR) or lineDirStr[i+offset] == direction or lineDirStr[i+offset] == BOTH_DIR:
+                if (string[i]!=line_str[i+offset] and line_str[i+offset]!=VOID_CHAR) or line_dir_str[i+offset] == direction or line_dir_str[i+offset] == BOTH_DIR:
                     fits = False
                     break
                 #else
-                if lineStr[i+offset]!=VOID_CHAR and lineStr[i+offset]!=WORD_WRAPPER_CHAR:
+                if line_str[i+offset]!=VOID_CHAR and line_str[i+offset]!=WORD_WRAPPER_CHAR:
                     intersections += 1
             if fits == True:
-                if intersections > bestOffsetIntersections:
-                    bestOffset = offset
-                    bestOffsetIntersections = intersections
+                if intersections > best_offset_intersections:
+                    best_offset = offset
+                    best_offset_intersections = intersections
             offset += 1
         #check if fits at end
         fits = True
         intersections = 0
-        for i in range(0,stringLen-2):
+        for i in range(0,string_len-2):
             #check for vaccancy and for collisions
-            if (string[i]!=lineStr[i+offset] and lineStr[i+offset]!=VOID_CHAR) or lineDirStr[i+offset] == direction or lineDirStr[i+offset] == BOTH_DIR:
+            if (string[i]!=line_str[i+offset] and line_str[i+offset]!=VOID_CHAR) or line_dir_str[i+offset] == direction or line_dir_str[i+offset] == BOTH_DIR:
                 fits = False
                 break
             #else
-            if lineStr[i+offset]!=VOID_CHAR and lineStr[i+offset]!=WORD_WRAPPER_CHAR:
+            if line_str[i+offset]!=VOID_CHAR and line_str[i+offset]!=WORD_WRAPPER_CHAR:
                 intersections += 1
         if fits == True:
-            if intersections > bestOffsetIntersections:
-                bestOffset = offset
-                bestOffsetIntersections = intersections
-        return bestOffset,bestOffsetIntersections
+            if intersections > best_offset_intersections:
+                best_offset = offset
+                best_offset_intersections = intersections
+        return best_offset,best_offset_intersections
 
-    def addWordToWordList(self,string,x,y,direction):
+    def add_word_to_word_list(self,string,x,y,direction):
         if string[0] == WORD_WRAPPER_CHAR:
             string = string[1:]
             if direction == HORI_DIR:
@@ -209,131 +209,131 @@ class Matrix:
             string = string[:-1]
         self.words.append(self.Word(string,x,y,direction))
 
-    def applyStrAtOffset(self,position,direction,string,offset):
+    def apply_str_at_offset(self,position,direction,string,offset):
         string = WORD_WRAPPER_CHAR + string + WORD_WRAPPER_CHAR
         if offset == -1:
             string = string[1:]
             offset = 0
         if(direction == HORI_DIR):
-            self.addWordToWordList(string,offset,position,direction)
+            self.add_word_to_word_list(string,offset,position,direction)
             for i in range(0,len(string)):
                 if (i+offset<self.__WIDTH):
                     self.__matrix[i+offset][position].set(string[i],HORI_DIR)
         else:
-            self.addWordToWordList(string,position,offset,direction)
+            self.add_word_to_word_list(string,position,offset,direction)
             for i in range(0,len(string)):
                 if (i+offset<self.__HEIGHT):
                     self.__matrix[position][i+offset].set(string[i],VERT_DIR)
 
 
-    def getBestPlace(self,direction,string, c =False):
-        bestPos = -1
-        bestScore = -1
-        bestOffset = -1
+    def get_best_place(self,direction,string, c =False):
+        best_pos = -1
+        best_score = -1
+        best_offset = -1
         if direction == HORI_DIR:
             dimension = self.__HEIGHT
         else:
             dimension = self.__WIDTH
         for i in range(0,dimension,2):
             if (c):
-                offset, score = self.c_getBestPlaceInLine(i,direction,string)
+                offset, score = self.c_get_best_place_in_line(i,direction,string)
             else:
-                offset, score = self.getBestPlaceInLine(i,direction,string)
-            if (bestScore<score):
-                bestScore = score
-                bestPos = i
-                bestOffset = offset
-        return bestOffset,bestPos,bestScore
+                offset, score = self.get_best_place_in_line(i,direction,string)
+            if (best_score<score):
+                best_score = score
+                best_pos = i
+                best_offset = offset
+        return best_offset,best_pos,best_score
 
-    def placeWord(self,strWord, c = False):
-        offset,pos,score = self.getBestPlace(self.__dirToggle,strWord, c)
+    def place_word(self,strWord, c = False):
+        offset,pos,score = self.get_best_place(self.__dir_toggle,strWord, c)
         if(score==-1):
             return -1
-        self.applyStrAtOffset(pos,self.__dirToggle,strWord,offset)
-        if (self.__dirToggle == HORI_DIR):
-            self.__dirToggle = VERT_DIR
+        self.apply_str_at_offset(pos,self.__dir_toggle,strWord,offset)
+        if (self.__dir_toggle == HORI_DIR):
+            self.__dir_toggle = VERT_DIR
         else:
-            self.__dirToggle = HORI_DIR
+            self.__dir_toggle = HORI_DIR
         return score
 
-    def placeWordDir(self,direction,strWord, c = False):
-        offset,pos,score = self.getBestPlace(direction,strWord, c)
+    def place_word_dir(self,direction,strWord, c = False):
+        offset,pos,score = self.get_best_place(direction,strWord, c)
         if(score==-1):
             return -1
-        self.applyStrAtOffset(pos,direction,strWord,offset)
+        self.apply_str_at_offset(pos,direction,strWord,offset)
         return score
 
-    def sortDictionaryWithScores(self,dictionary, direction, c = False, kick = False):
+    def sort_dictionary_with_scores(self,dictionary, direction, c = False, kick = False):
         def getScore(str):
-            offset,pos,score = self.getBestPlace(direction, str, c)
+            offset,pos,score = self.get_best_place(direction, str, c)
             return score
         dictionary.sort(key=len, reverse = True)
-        dictAndScore = [[w,getScore(w)] for w in dictionary]
-        dictAndScore.sort(key = lambda x : x[1], reverse = True)
+        dict_and_score = [[w,getScore(w)] for w in dictionary]
+        dict_and_score.sort(key = lambda x : x[1], reverse = True)
         if kick:
-            dictionary = [w[0] for w in dictAndScore if w[1]>=0]
+            dictionary = [w[0] for w in dict_and_score if w[1]>=0]
         else:
-            dictionary = [w[0] for w in dictAndScore]
+            dictionary = [w[0] for w in dict_and_score]
         return dictionary
               
 
-    def createCrossword(self,dictHori, dictVert, c = False, firstTime = True):
-        dictionaryH = dictHori.copy()
-        dictionaryV = dictVert.copy()
-        doneVertical = False
-        doneHorizontal = False
+    def create_crossword(self,dict_hori, dict_vert, c = False, first_time = True):
+        dictionary_h = dict_hori.copy()
+        dictionary_v = dict_vert.copy()
+        done_vertical = False
+        done_horizontal = False
         #find word with best score
-        while(not doneVertical or not doneHorizontal):
-            if (self.__dirToggle == HORI_DIR):
-                dictionaryH = self.sortDictionaryWithScores(dictionaryH, HORI_DIR, c, kick = True)
-                if dictionaryH:
-                    sc = self.placeWordDir(HORI_DIR,dictionaryH[0], c)
-                    removed = dictionaryH.pop(0)
-                    if removed in dictionaryV: dictionaryV.remove(removed)
+        while(not done_vertical or not done_horizontal):
+            if (self.__dir_toggle == HORI_DIR):
+                dictionary_h = self.sort_dictionary_with_scores(dictionary_h, HORI_DIR, c, kick = True)
+                if dictionary_h:
+                    sc = self.place_word_dir(HORI_DIR,dictionary_h[0], c)
+                    removed = dictionary_h.pop(0)
+                    if removed in dictionary_v: dictionary_v.remove(removed)
                 else:
-                    doneHorizontal = True
+                    done_horizontal = True
                     sc = -1
-                if not firstTime and sc <= 0:
-                    doneHorizontal = True
-                self.__dirToggle = VERT_DIR
+                if not first_time and sc <= 0:
+                    done_horizontal = True
+                self.__dir_toggle = VERT_DIR
 
             # if direction is vertical
             else: 
-                dictionaryV = self.sortDictionaryWithScores(dictionaryV, VERT_DIR, c, kick = True)
-                if dictionaryV:
-                    sc = self.placeWordDir(VERT_DIR,dictionaryV[0], c)
-                    removed = dictionaryV.pop(0)
-                    if removed in dictionaryH: dictionaryH.remove(removed)
+                dictionary_v = self.sort_dictionary_with_scores(dictionary_v, VERT_DIR, c, kick = True)
+                if dictionary_v:
+                    sc = self.place_word_dir(VERT_DIR,dictionary_v[0], c)
+                    removed = dictionary_v.pop(0)
+                    if removed in dictionary_h: dictionary_h.remove(removed)
                 else:
-                    doneVertical = True
+                    done_vertical = True
                     sc = -1
-                if not firstTime and sc <= 0:
-                    doneVertical = True
-                self.__dirToggle = HORI_DIR
+                if not first_time and sc <= 0:
+                    done_vertical = True
+                self.__dir_toggle = HORI_DIR
 
             #end of while
-            firstTime = False           
+            first_time = False           
 
 
 
-    def countIntersections(self): #TODO ver se vale otimizar
+    def count_intersections(self): #TODO ver se vale otimizar
         intersections = 0
         for i in range(0,self.__WIDTH):
             for j in range(0,self.__HEIGHT):
-                if self.__matrix[i][j].getDir() == BOTH_DIR:
+                if self.__matrix[i][j].get_dir() == BOTH_DIR:
                     intersections += 1
         return intersections
 
-    def getIntersectionRatio(self):
+    def get_intersection_ratio(self):
         intersections = 0
-        noIntersection = 0
+        no_intersection = 0
         for i in range(0,self.__WIDTH):
             for j in range(0,self.__HEIGHT):
-                if self.__matrix[i][j].getDir() == BOTH_DIR:
+                if self.__matrix[i][j].get_dir() == BOTH_DIR:
                     intersections += 1
-                elif self.__matrix[i][j].getDir() == VERT_DIR or self.__matrix[i][j].getDir() == HORI_DIR:
-                    noIntersection += 1
-        if (noIntersection+intersections == 0):
+                elif self.__matrix[i][j].get_dir() == VERT_DIR or self.__matrix[i][j].get_dir() == HORI_DIR:
+                    no_intersection += 1
+        if (no_intersection+intersections == 0):
             return -1
-        return intersections/noIntersection#(noIntersection+intersections)
+        return intersections/no_intersection#(noIntersection+intersections)
 

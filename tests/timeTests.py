@@ -16,10 +16,10 @@ import algorythms
 def timeLookAheadAlg(iterations = 1):
     score = 0
     start_time = time.perf_counter()
-    dictionary = fileHandler.getDictionaries()
+    dictionary = fileHandler.get_dictionaries()
     matrix = crosswordMatrix.Matrix(width=14,height=14)
     for i in range(iterations):
-        matrix, usedWords = algorythms.lookAhead(width=14,height=14,dictionaryOrig=dictionary,lookOverXTopWords=3)
+        matrix, usedWords = algorythms.look_ahead(width=14,height=14,dictionaryOrig=dictionary,look_over_x_top_words=3)
         score+=matrix.countIntersections()
         for word in usedWords:
             dictionary.pop(dictionary.index(word))
@@ -28,8 +28,8 @@ def timeLookAheadAlg(iterations = 1):
 # readUsedWords()
 
 def timeBruteForceAlg(iterations):
-    dictionary = fileHandler.getDictionaries()
-    matrix,bestRatioMatrix,scores = algorythms.bruteForce(width=14,height=14,dictionary=dictionary,iterations=iterations)
+    dictionary = fileHandler.get_dictionaries()
+    matrix,bestRatioMatrix,scores = algorythms.brute_force(width=14,height=14,dictionary=dictionary,iterations=iterations)
     matrix.printM()
 
 def logPerformance():
@@ -59,7 +59,7 @@ def profile(command,locals, outputName):
     stats.print_stats()
     
 if __name__ == "__main__":
-    dictionary = fileHandler.getDictionaries()
+    dictionary = fileHandler.get_dictionaries()
     #crosswordGen.generateCrosswordsAndFiles(width=WIDTH, height=HEIGHT, nOfCrossWordsToGenerate=CROSSWORDS_TO_GENERATE, minimumScore=39, dictionary=dictionary, c = True)
     pythonVersion = "matrix, usedWords = algorythms.lookAhead(WIDTH,HEIGHT,dictionary,3,c = False)"
     cVersion = "matrix, usedWords = algorythms.lookAhead(WIDTH,HEIGHT,dictionary,3,c = True)"
@@ -67,5 +67,5 @@ if __name__ == "__main__":
     #profile(pythonVersion, locals = locals(), outputName="pythonVersionProfile")
     #logPerformance()
 
-    matrix, usedWords = algorythms.lookAhead(WIDTH,HEIGHT,dictionary,3,c = False)
+    matrix, usedWords = algorythms.look_ahead(WIDTH,HEIGHT,dictionary,3,c = False)
     ok = 2

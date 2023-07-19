@@ -27,60 +27,60 @@ class testUpdateUserList(unittest.TestCase):
     def testPlaceWordDir(self):
         mat = Matrix(14,14)
         #newMat.createCrossword(dictionary)
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"abcabcaababaa")#
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcabcabbabb")
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"cabcabcsbs")#
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcabc")
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcdefghi")
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"arfrbr")#
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"abcabcaababaa")#
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"bcabcabbabb")
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"cabcabcsbs")#
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"abcabcabc")
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"bcdefghi")
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"arfrbr")#
         #mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcdefghi")
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"btbtttttotttx")
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz") #
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz") # #shouldnt insert
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"acogwyui") # #FAIL word wrapper impede palavra de chegar ate o fim
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"acaaaaaauaaapa") #FAIL word wrapper impede palavra de chegar ate o fim
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"btbtttttotttx")
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz") #
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz") # #shouldnt insert
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"acogwyui") # #FAIL word wrapper impede palavra de chegar ate o fim
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"acaaaaaauaaapa") #FAIL word wrapper impede palavra de chegar ate o fim
         # import pyperclip
         # pyperclip.copy(mat.getMatrixString())
-        self.assertEqual(self.assertMatString,mat.getMatrixString())
+        self.assertEqual(self.assertMatString,mat.get_matrix_string())
 
     def testPlaceWordDir_c(self):
         mat = Matrix(14,14)
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"abcabcaababaa", True)#
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcabcabbabb", True)
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"cabcabcsbs", True)#
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"abcabcabc", True)
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcdefghi", True)
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"arfrbr", True)#
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"abcabcaababaa", True)#
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"bcabcabbabb", True)
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"cabcabcsbs", True)#
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"abcabcabc", True)
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"bcdefghi", True)
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"arfrbr", True)#
         #mat.placeWordDir(crosswordMatrix.HORI_DIR,"bcdefghi")
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"btbtttttotttx", True)
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz", True) #
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz", True) # #shouldnt insert
-        mat.placeWordDir(crosswordMatrix.VERT_DIR,"acogwyui", True) # #FAIL word wrapper impede palavra de chegar ate o fim
-        mat.placeWordDir(crosswordMatrix.HORI_DIR,"acaaaaaauaaapa", True) #FAIL word wrapper impede palavra de chegar ate o fim
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"btbtttttotttx", True)
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz", True) #
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz", True) # #shouldnt insert
+        mat.place_word_dir(crosswordMatrix.VERT_DIR,"acogwyui", True) # #FAIL word wrapper impede palavra de chegar ate o fim
+        mat.place_word_dir(crosswordMatrix.HORI_DIR,"acaaaaaauaaapa", True) #FAIL word wrapper impede palavra de chegar ate o fim
         # import pyperclip
         # pyperclip.copy(mat.getMatrixString())
-        self.assertEqual(self.assertMatString,mat.getMatrixString())
+        self.assertEqual(self.assertMatString,mat.get_matrix_string())
         
     def testBlockedIfTooBig(self):
         mat = Matrix(14,14)        
-        bp = mat.getBestPlace(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaa")
+        bp = mat.get_best_place(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaa")
         self.assertEqual((-1, 0, 0),bp)
-        bp = mat.getBestPlace(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaaa")
+        bp = mat.get_best_place(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaaa")
         self.assertEqual((-1, -1, -1),bp)
-        bp = mat.getBestPlace(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaa")
+        bp = mat.get_best_place(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaa")
         self.assertEqual((-1, 0, 0),bp)
-        bp = mat.getBestPlace(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaaa")
+        bp = mat.get_best_place(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaaa")
         self.assertEqual((-1, -1, -1),bp)
 
     def testBlockedIfTooBig_c(self):
         mat = Matrix(14,14)        
-        bp = mat.getBestPlace(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaa", True)
+        bp = mat.get_best_place(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaa", True)
         self.assertEqual((-1, 0, 0),bp)
-        bp = mat.getBestPlace(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaaa", True)
+        bp = mat.get_best_place(crosswordMatrix.VERT_DIR,"aaaaaaaaaaaaaaa", True)
         self.assertEqual((-1, -1, -1),bp)
-        bp = mat.getBestPlace(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaa", True)
+        bp = mat.get_best_place(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaa", True)
         self.assertEqual((-1, 0, 0),bp)
-        bp = mat.getBestPlace(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaaa", True)
+        bp = mat.get_best_place(crosswordMatrix.HORI_DIR,"aaaaaaaaaaaaaaa", True)
         self.assertEqual((-1, -1, -1),bp)
 
 
