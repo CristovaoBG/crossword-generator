@@ -35,7 +35,7 @@ class Matrix:
     def get_matrix_descriptor_str(self):
         string = ""
         for w in self.words:
-            string += str(w.x) + " " + str(w.y) + " " +  w.direction + " " + w.string + "\n"
+            string += f"{w.x} {w.y} {w.direction} {w.string}\n"
         return string
 
     class Word:
@@ -119,10 +119,19 @@ class Matrix:
         c_width = ctypes.c_int(self.__WIDTH)
         c_direction = ctypes.c_char(b'h' if direction==HORI_DIR else b'v')
         c_word = ctypes.create_string_buffer(string.encode('utf-8'))
-        c_matrix_string = ctypes.create_string_buffer(self.get_matrix_descriptor_str().encode('utf-8'))
+        c_matrix_string = ctypes.create_string_buffer(
+            self.get_matrix_descriptor_str().encode('utf-8'))
         c_best_offset = ctypes.c_int(-1)
         c_intersection_count = ctypes.c_int(-1)
-        c_best_place_in_line(c_height,c_width,c_direction,c_word,c_matrix_string,c_line,ctypes.byref(c_best_offset),ctypes.byref(c_intersection_count))
+        c_best_place_in_line(c_height,
+                             c_width,
+                             c_direction,
+                             c_word,
+                             c_matrix_string,
+                             c_line,
+                             ctypes.byref(c_best_offset),
+                             ctypes.byref(c_intersection_count)
+                             )
         return c_best_offset.value, c_intersection_count.value
 
 
@@ -153,7 +162,9 @@ class Matrix:
             #check for vaccancy and for collisions
             if(i==line_str_len and string[i+1]): #check if is last position
                 continue
-            if (string[i+1]!=line_str[i] and line_str[i]!=VOID_CHAR) or line_dir_str[i] == direction or line_dir_str[i] == BOTH_DIR:
+            if ((string[i+1]!=line_str[i] and line_str[i]!=VOID_CHAR) 
+                    or line_dir_str[i] == direction 
+                    or line_dir_str[i] == BOTH_DIR):
                 fits = False
                 break
             #else
@@ -170,11 +181,14 @@ class Matrix:
             intersections = 0
             for i in range(0,string_len):
                 #check for vaccancy and for collisions
-                if (string[i]!=line_str[i+offset] and line_str[i+offset]!=VOID_CHAR) or line_dir_str[i+offset] == direction or line_dir_str[i+offset] == BOTH_DIR:
+                if ((string[i]!=line_str[i+offset] and line_str[i+offset]!=VOID_CHAR) 
+                        or line_dir_str[i+offset] == direction 
+                        or line_dir_str[i+offset] == BOTH_DIR):
                     fits = False
                     break
                 #else
-                if line_str[i+offset]!=VOID_CHAR and line_str[i+offset]!=WORD_WRAPPER_CHAR:
+                if (line_str[i+offset]!=VOID_CHAR 
+                        and line_str[i+offset]!=WORD_WRAPPER_CHAR):
                     intersections += 1
             if fits == True:
                 if intersections > best_offset_intersections:
@@ -186,11 +200,14 @@ class Matrix:
         intersections = 0
         for i in range(0,string_len-2):
             #check for vaccancy and for collisions
-            if (string[i]!=line_str[i+offset] and line_str[i+offset]!=VOID_CHAR) or line_dir_str[i+offset] == direction or line_dir_str[i+offset] == BOTH_DIR:
+            if ((string[i]!=line_str[i+offset] and line_str[i+offset]!=VOID_CHAR)
+                    or line_dir_str[i+offset] == direction 
+                    or line_dir_str[i+offset] == BOTH_DIR):
                 fits = False
                 break
             #else
-            if line_str[i+offset]!=VOID_CHAR and line_str[i+offset]!=WORD_WRAPPER_CHAR:
+            if (line_str[i+offset]!=VOID_CHAR 
+                    and line_str[i+offset]!=WORD_WRAPPER_CHAR):
                 intersections += 1
         if fits == True:
             if intersections > best_offset_intersections:
@@ -285,7 +302,10 @@ class Matrix:
         #find word with best score
         while(not done_vertical or not done_horizontal):
             if (self.__dir_toggle == HORI_DIR):
-                dictionary_h = self.sort_dictionary_with_scores(dictionary_h, HORI_DIR, c, kick = True)
+                dictionary_h = self.sort_dictionary_with_scores(dictionary_h,
+                                                                HORI_DIR,
+                                                                c,
+                                                                kick = True)
                 if dictionary_h:
                     sc = self.place_word_dir(HORI_DIR,dictionary_h[0], c)
                     removed = dictionary_h.pop(0)
@@ -299,7 +319,10 @@ class Matrix:
 
             # if direction is vertical
             else: 
-                dictionary_v = self.sort_dictionary_with_scores(dictionary_v, VERT_DIR, c, kick = True)
+                dictionary_v = self.sort_dictionary_with_scores(dictionary_v,
+                                                                VERT_DIR,
+                                                                c,
+                                                                kick = True)
                 if dictionary_v:
                     sc = self.place_word_dir(VERT_DIR,dictionary_v[0], c)
                     removed = dictionary_v.pop(0)
@@ -314,9 +337,7 @@ class Matrix:
             #end of while
             first_time = False           
 
-
-
-    def count_intersections(self): #TODO ver se vale otimizar
+    def count_intersections(self):
         intersections = 0
         for i in range(0,self.__WIDTH):
             for j in range(0,self.__HEIGHT):
@@ -331,7 +352,8 @@ class Matrix:
             for j in range(0,self.__HEIGHT):
                 if self.__matrix[i][j].get_dir() == BOTH_DIR:
                     intersections += 1
-                elif self.__matrix[i][j].get_dir() == VERT_DIR or self.__matrix[i][j].get_dir() == HORI_DIR:
+                elif (self.__matrix[i][j].get_dir() == VERT_DIR 
+                      or self.__matrix[i][j].get_dir() == HORI_DIR):
                     no_intersection += 1
         if (no_intersection+intersections == 0):
             return -1
