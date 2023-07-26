@@ -27,86 +27,96 @@ Three types of output are generated for every generated crossword:
 ### Output example
 for a given dictionary set of words in the input folder, a typical output for it would look something like the following, for a 14/14 crossword:
 ##### Words file:
-``` individualismo
-incandescencia
-espectroscopia
-desnutricao
-coerencia
-microbiota
-leucocitos
-poesia
-nervoso
-isometrica
-independencia
-enredo
-catalise
-opep
-etica
-rad
-
+``` proparoxitona
+isovolumetrica
+totalitarismo
+aguapotavel
+centrifugacao
+digestivo
+ondulatoria
+parasitose
+frio
+otan
+solo
+nuclear
+al
+oxitona
+pb
+fusao
+mmc
+isotopo
+ele
 ```
 ##### Layout file:
 |||||||||||||||
 |------|------|------|------|------|------|------|------|------|------|------|------|------|------|
-|I|N|D|I|V|I|D|U|A|L|I|S|M|O|
-|N| |S| |E| |E| |L| | | |I| |
-|C|A|T|A|L|I|S|E| |E|T|I|C|A|
-|A| | | | | |N| |P| | | |R| |
-|N|A| | |L|E|U|C|O|C|I|T|O|S|
-|D| | | | | |T| |E| |S| |B| |
-|E|S|P|E|C|T|R|O|S|C|O|P|I|A|
-|S| | | |L| |I| |I| |M| |O| |
-|C|O|E|R|E|N|C|I|A| |E|S|T|E|
-|E| |N| |R| |A| | | |T| |A| |
-|N|E|R|V|O|S|O| |O|U|R|O| | |
-|C| |E| | | | | |P| |I| |R| |
-|I|N|D|E|P|E|N|D|E|N|C|I|A| |
-|A| |O| |I| | | |P| |A| |D| |
+|P|R|O|P|A|R|O|X|I|T|O|N|A| |
+|I| | | |G| |T| |S| |X| |S| |
+| |O|N|D|U|L|A|T|O|R|I|A| | |
+|A| |U| |A| |N| |V| |T| |P| |
+|M|M|C| |P|B| |S|O|L|O| |A|L|
+|P| |L| |O| |D| |L| |N| |R| |
+| |C|E|N|T|R|I|F|U|G|A|C|A|O|
+|I| |A| |A| |G| |M| | | |S| |
+|S|E|R| |V| |E|L|E| |F|R|I|O|
+|O| | | |E| |S| |T| |U| |T| |
+|T|O|T|A|L|I|T|A|R|I|S|M|O| |
+|O| |R| | | |I| |I| |A| |S| |
+|P|R|E|S|E|R|V|A|C|A|O| |E|U|
+|O| |S| |M| |O| |A| | | | | |
 
 ##### Directions file:
 |||||||||||||||
 |------|------|------|------|------|------|------|------|------|------|------|------|------|------|
-|+|─|+|─|+|─|+|─|+|─|─|─|+|─|
-|\|| |\|| |\| ||\|| |\|| | | |\| |
-|+|─|+|─|+|─|+|─| |─|─|─|+|─|
-|\| | | | | ||\|| |\|| | | |\| |
-|+|─| | |─|─|+|─|+|─|+|─|+|─|
-|\| | | | | ||\|| |\|| |\|| |\| |
-|+|─|─|─|+|─|+|─|+|─|+|─|+|─|
-|\|| | | |\|| |\|| |\|| |\|| |\| ||
-|+|─|+|─|+|─|+|─|+| |+|─|+|─|
+|+|─| |─|+|─| |─|+|─|+|─|+|─|
+|\|| |\|| |\|| |\|| |\|| |\|| |\|| |
+|\|| |+|─|+|─|+|─|+| |+|─|+|─|
+|\|| |\|| | | |\|| | | |\|| |\|| |
+|+|─|+|─|+|─|+|─|─|─|+| |+|─|
 |\|| |\|| |\|| |\|| | | |\|| |\|| |
-|+|─|+|─|+|─|+| |+|─|+|─| | |
-|\|| |\|| | | | | |\|| |\|| |\|| |
-|+|─|+|─|+|─|─|─|+|─|+|─|+| |
-|\|| |\|| |\|| | | |\|| |\|| |\|| |
+|+|─|+|─| |─|+|─|+|─|+|─|+|─|
+|\|| |\|| |\|| |\|| |\|| |\|| |\|| |
+|+|─|+|─|+|─|+|─|+|─|+|─|+|─|
+|\|| |\|| |\|| |\|| | | |\|| |\|| |
+|+|─|+|─|+|─|+| |+|─|+|─|+| |
+|\|| |\|| | | |\|| |\|| |\|| | | |
+|+|─| |─|+|─|+|─|+|─|+|─|+| |
+| | | | |\|| |\|| |\|| | | |\|| |
 
 ##### Descriptor file:
 The first two numbers of each line of the descriptor indicates the X and Y origin of the given word, then the following character (before the actual word) indicates if the word is oriented in the vertically ("|") or horizontally ("-").
 ```
-individualismo
-incandescencia
-espectroscopia
-desnutricao
-coerencia
-microbiota
-leucocitos
-poesia
-nervoso
-isometrica
-independencia
-enredo
-catalise
-opep
-etica
-rad
+0 0 | proparoxitona
+0 8 - isovolumetrica
+10 0 | totalitarismo
+0 4 - aguapotavel
+6 1 | centrifugacao
+5 6 - digestivo
+2 1 | ondulatoria
+3 12 - parasitose
+8 10 | frio
+0 6 - otan
+4 7 | solo
+2 2 - nuclear
+4 12 | al
+0 10 - oxitona
+4 4 | pb
+8 10 - fusao
+4 0 | mmc
+7 0 - isotopo
+8 6 | ele
+10 2 - tres
+12 0 | preservacao
+3 0 - amp
+8 0 | ser
+0 0 - pi
+12 12 | eu
+0 12 - as
+12 4 - em
+
 ```
 
 Scpecial characters that indicates direction, end of word and blank spaces can easily be changed in the code.
-
-### TODO
-- Optimize some time consuming functions in Cython
-- Handle bad usage exceptions 
 
     
 Created by Cristóvão B. Gomes
