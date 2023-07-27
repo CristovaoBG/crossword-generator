@@ -18,7 +18,8 @@ def brute_force(width,height,dictionary,iterations):
         tot_intersections = new_mat.count_intersections()
         ratio = new_mat.get_intersection_ratio()
         scores.append(ratio)
-        print("iteration:",i,"total of intersections:",tot_intersections,"intersection to letter ratio:",ratio)
+        #print("iteration:",i,"total of intersections:",tot_intersections,"intersection to letter ratio:",ratio)
+        print(f"iteration: {i}, intersections: {tot_intersections}, intersection to letter ratio: {ratio}")
         if (most_intersections < tot_intersections):
             best_matrix = copy.deepcopy(new_mat)
             most_intersections = tot_intersections
@@ -27,7 +28,11 @@ def brute_force(width,height,dictionary,iterations):
             best_ratio = ratio
     return best_matrix,best_ratio_matrix,scores
 
-def look_ahead(width,height,dictionaryOrig,look_over_x_top_words, c=False):
+def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
+    """ Try the top X scoring words (look_over_x_top_words) and seeing 
+    how the crossword would turn out for each one, and selecting the 
+    word with highest score (most intersections). Does that for each
+    word until the crossword is complete. """
 
     def calculates_future_score(dictionary_h, dictionary_v, word, matrix):
         new_matrix = copy.deepcopy(matrix)
@@ -47,11 +52,10 @@ def look_ahead(width,height,dictionaryOrig,look_over_x_top_words, c=False):
         return score, new_matrix
 
     dictionary = dictionaryOrig.copy()
-    #if __debug__: dictionary = [w for w in dictionary if len(w)>2]
     print("dictionary size:",len(dictionary))
     matrix = crosswordMatrix.Matrix(width,height)
     used_words = []
-    #otimizavel (proprimeira palavra testada varias vezes)
+    # otimizavel (proprimeira palavra testada varias vezes)
     dictionary_h = dictionary.copy()
     dictionary_v = dictionary.copy()
     while True:
@@ -64,7 +68,8 @@ def look_ahead(width,height,dictionaryOrig,look_over_x_top_words, c=False):
                                                       c)
         best_future_matrix = matrix
         
-        d = dictionary_h if matrix.get_current_dir() == crosswordMatrix.HORI_DIR else dictionary_v
+        direction = matrix.get_current_dir()
+        d = dictionary_h if direction == crosswordMatrix.HORI_DIR else dictionary_v
         best_word = d[0]
         best_score = -1
         score,future_matrix = calculates_future_score(dictionary_h, dictionary_v, d[0], matrix)
@@ -85,7 +90,7 @@ def look_ahead(width,height,dictionaryOrig,look_over_x_top_words, c=False):
                     best_score = score
                     best_word = word
                     best_future_matrix = copy.deepcopy(future_matrix)
-                #adds a little bit of impredictibility
+                # adds a little bit of impredictibility
                 elif score == best_score and random.random() >= 0.5:
                     best_score = score
                     best_word = word
@@ -98,7 +103,7 @@ def look_ahead(width,height,dictionaryOrig,look_over_x_top_words, c=False):
             break
         print("selected word:",best_word,". future score:",best_score)
         used_words.append(best_word)
-        #remove current word out of the dictionary
+        # remove current word out of the dictionary
         if best_word in dictionary_h: dictionary_h.remove(best_word)
         if best_word in dictionary_v: dictionary_v.remove(best_word)
         if __debug__: best_future_matrix.printM(' ',' ')
