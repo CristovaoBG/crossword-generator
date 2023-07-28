@@ -5,9 +5,6 @@ from defs import *
 import copy
 import os
 
-# TODO: Corrigir bug para palavras grandes demais, nao deveriam ser processadas
-
-
 def generate_crosswords_and_files(width, height, n_of_crosswords_to_generate, minimum_score, dictionary, c = False):
     used_words = fileHandler.read_used_words()
     dictionary = [d for d in dictionary if d not in used_words]
@@ -26,15 +23,15 @@ def generate_crosswords_and_files(width, height, n_of_crosswords_to_generate, mi
         offset = 0
         while(os.path.isfile(OUTPUT_PATH+"\crossword"+str(offset+i)+"\Descriptor.txt")):
             offset += 1
-        # TODO: remover formato feio das strings abaixo, usar f{}
+
         fileHandler.save_string(matrix.get_matrix_string(),
-                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Layout.txt")
+                               f"{OUTPUT_PATH}\crossword{i+offset}\Layout.txt")
         fileHandler.save_string(matrix.get_directions_string(),
-                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Directions.txt")
+                               f"{OUTPUT_PATH}\crossword{i+offset}\Directions.txt")
         fileHandler.save_string(matrix.get_matrix_descriptor_str(),
-                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Descriptor.txt")
+                               f"{OUTPUT_PATH}\crossword{i+offset}\Descriptor.txt")
         fileHandler.save_string(used_words_str,
-                               OUTPUT_PATH+"\crossword"+str(i+offset)+"\Words.txt")
+                               f"{OUTPUT_PATH}\crossword{i+offset}\Words.txt")
 
 
 def find_forever(width, height, n_of_crosswords_to_generate, minimum_score, dictionary, c = False):
