@@ -57,8 +57,6 @@ class testUpdateUserList(unittest.TestCase):
         mat.place_word_dir(crosswordMatrix.VERT_DIR,"zzzzzzzzxzzzpz", True) # #shouldnt insert
         mat.place_word_dir(crosswordMatrix.VERT_DIR,"acogwyui", True) # #FAIL word wrapper impede palavra de chegar ate o fim
         mat.place_word_dir(crosswordMatrix.HORI_DIR,"acaaaaaauaaapa", True) #FAIL word wrapper impede palavra de chegar ate o fim
-        # import pyperclip
-        # pyperclip.copy(mat.getMatrixString())
         self.assertEqual(self.assertMatString,mat.get_matrix_string())
         
     def testBlockedIfTooBig(self):
@@ -85,6 +83,5 @@ class testUpdateUserList(unittest.TestCase):
 
 
 # Executar os testes
-# TODO make it work on VSCODE (only works in powershell)
 if __name__ == '__main__':
     unittest.main()
