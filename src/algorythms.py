@@ -39,7 +39,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
         new_matrix.place_word(word, c)
         new_dictionary_h = dictionary_h.copy()
         new_dictionary_v = dictionary_v.copy()
-        #remove current word of new dictionary
+        # remove current word of new dictionary
         if word in new_dictionary_h: new_dictionary_h.remove(word)
         if word in new_dictionary_v: new_dictionary_v.remove(word)
         new_matrix.sort_dictionary_with_scores(new_dictionary_h,
@@ -79,7 +79,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
             best_future_matrix = copy.deepcopy(future_matrix)
         else:
             for word in d[0:look_over_x_top_words if len(d) > look_over_x_top_words else len(d)]:
-                # calcula o melhor score futuro das cinco melhores palavras atuais
+                # calculate the future score of the X top words in the dictionary
                 score,future_matrix = calculates_future_score(dictionary_h,
                                                            dictionary_v,
                                                            word,
@@ -90,7 +90,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
                     best_score = score
                     best_word = word
                     best_future_matrix = copy.deepcopy(future_matrix)
-                # adds a little bit of impredictibility
+                # adds a little bit of impredictibility (but... why?)
                 elif score == best_score and random.random() >= 0.5:
                     best_score = score
                     best_word = word
