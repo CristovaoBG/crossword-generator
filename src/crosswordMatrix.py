@@ -299,6 +299,7 @@ class Matrix:
         dictionary_v = dict_vert.copy()
         done_vertical = False
         done_horizontal = False
+        sc = -1
         #find word with best score
         while(not done_vertical or not done_horizontal):
             if (self.__dir_toggle == HORI_DIR):
