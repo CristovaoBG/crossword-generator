@@ -9,7 +9,7 @@ def brute_force(width,height,dictionary,iterations):
     empty_matrix = crosswordMatrix.Matrix(width,height)
     best_matrix = empty_matrix
     best_ratio_matrix = empty_matrix
-    #brute forces matrix with most intersections and best ratio.
+    # brute forces matrix with most intersections and best ratio.
     scores = []
     for i in range(0,iterations):
         random.shuffle(dictionary)
@@ -36,7 +36,9 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
 
     def calculates_future_score(dictionary_h, dictionary_v, word, matrix):
         new_matrix = copy.deepcopy(matrix)
-        new_matrix.place_word(word, c)
+        score = new_matrix.place_word(word, c)
+        if score < 0: 
+            return -1, copy.deepcopy(matrix)
         new_dictionary_h = dictionary_h.copy()
         new_dictionary_v = dictionary_v.copy()
         # remove current word of new dictionary
@@ -72,7 +74,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
         d = dictionary_h if direction == crosswordMatrix.HORI_DIR else dictionary_v
         best_word = d[0]
         best_score = -1
-        score,future_matrix = calculates_future_score(dictionary_h, dictionary_v, d[0], matrix)
+        score, future_matrix = calculates_future_score(dictionary_h, dictionary_v, d[0], matrix)
         if ((len(d[0]) == 3 and score==2)) or (len(d[0]) == 2 and score==1):
             best_score = score
             best_word = d[0]
@@ -80,7 +82,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
         else:
             for word in d[0:look_over_x_top_words if len(d) > look_over_x_top_words else len(d)]:
                 # calculate the future score of the X top words in the dictionary
-                score,future_matrix = calculates_future_score(dictionary_h,
+                score, future_matrix = calculates_future_score(dictionary_h,
                                                            dictionary_v,
                                                            word,
                                                            matrix)

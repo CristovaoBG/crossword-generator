@@ -54,4 +54,4 @@ def find_forever(width, height, n_of_crosswords_to_generate, minimum_score, dict
 if __name__=="__main__":
     dictionary = fileHandler.get_dictionaries()
 
-    generate_crosswords_and_files(width=WIDTH, height=HEIGHT, n_of_crosswords_to_generate=15, minimum_score=40, dictionary=dictionary, c = True)
+    generate_crosswords_and_files(width=WIDTH, height=HEIGHT, n_of_crosswords_to_generate=15, minimum_score=37, dictionary=dictionary, c = True)
