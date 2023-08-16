@@ -98,7 +98,7 @@ class Matrix:
         str = ""
         for i in range(0,self.__HEIGHT):
             for j in range(self.__WIDTH):
-                str += self.__matrix[j][i].getDir()
+                str += self.__matrix[j][i].get_dir()
             str +="\n"
         return str
     #otimizavel essas duas (combinaveis como a printM e getMatrixString)
