@@ -292,7 +292,7 @@ class Matrix:
         else:
             dictionary = [w[0] for w in dict_and_score]
         return dictionary
-              
+
 
     def create_crossword(self,dict_hori, dict_vert, c = False, first_time = True):
         dictionary_h = dict_hori.copy()
@@ -307,9 +307,13 @@ class Matrix:
                                                                 c,
                                                                 kick = True)
                 if dictionary_h:
-                    sc = self.place_word_dir(HORI_DIR,dictionary_h[0], c)
-                    removed = dictionary_h.pop(0)
-                    if removed in dictionary_v: dictionary_v.remove(removed)
+                    _, _, score = self.get_best_place(HORI_DIR, dictionary_h[0], c) #ugly 
+                    if score > 0 or first_time:
+                        sc = self.place_word_dir(HORI_DIR,dictionary_h[0], c)
+                        removed = dictionary_h.pop(0)
+                        if removed in dictionary_v: dictionary_v.remove(removed)
+                    else:
+                        done_horizontal = True
                 else:
                     done_horizontal = True
                     sc = -1
@@ -324,9 +328,13 @@ class Matrix:
                                                                 c,
                                                                 kick = True)
                 if dictionary_v:
-                    sc = self.place_word_dir(VERT_DIR,dictionary_v[0], c)
-                    removed = dictionary_v.pop(0)
-                    if removed in dictionary_h: dictionary_h.remove(removed)
+                    _, _, score = self.get_best_place(VERT_DIR, dictionary_v[0], c) #ugly
+                    if score > 0 or first_time:
+                        sc = self.place_word_dir(VERT_DIR,dictionary_v[0], c)
+                        removed = dictionary_v.pop(0)
+                        if removed in dictionary_h: dictionary_h.remove(removed)
+                    else:
+                        done_vertical = True
                 else:
                     done_vertical = True
                     sc = -1

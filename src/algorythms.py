@@ -60,6 +60,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
     # otimizavel (proprimeira palavra testada varias vezes)
     dictionary_h = dictionary.copy()
     dictionary_v = dictionary.copy()
+    m_intersection_count = -1
     while True:
         print("looking for next word...")
         dictionary_h = matrix.sort_dictionary_with_scores(dictionary_h,
@@ -100,8 +101,11 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
 
         if best_score < 0:
             break
+        previous_m_intersection_count = m_intersection_count
         sc = matrix.place_word(best_word, c)
-        if sc == -1:
+        m_intersection_count = matrix.count_intersections()
+        # if doesn't fit or score didn't changed, quits
+        if sc == -1 or previous_m_intersection_count == m_intersection_count:
             break
         print("selected word:",best_word,". future score:",best_score)
         used_words.append(best_word)
