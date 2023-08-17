@@ -60,7 +60,6 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
     # otimizavel (proprimeira palavra testada varias vezes)
     dictionary_h = dictionary.copy()
     dictionary_v = dictionary.copy()
-    m_intersection_count = -1
     while True:
         print("looking for next word...")
         dictionary_h = matrix.sort_dictionary_with_scores(dictionary_h,
@@ -70,17 +69,20 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
                                                       crosswordMatrix.VERT_DIR,
                                                       c)
         best_future_matrix = matrix
+        output_matrix = best_future_matrix
         
         direction = matrix.get_current_dir()
         d = dictionary_h if direction == crosswordMatrix.HORI_DIR else dictionary_v
         best_word = d[0]
         best_score = -1
-        score, future_matrix = calculates_future_score(dictionary_h, dictionary_v, d[0], matrix)
-        if ((len(d[0]) == 3 and score==2)) or (len(d[0]) == 2 and score==1):
+        score, future_matrix = calculates_future_score(dictionary_h, dictionary_v, best_word, matrix)
+        # finds word wich will yield the best matrix score
+        if ((len(best_word) == 3 and score == 2)) or (len(best_word) == 2 and score == 1):
             best_score = score
             best_word = d[0]
             best_future_matrix = copy.deepcopy(future_matrix)
         else:
+        
             for word in d[0:look_over_x_top_words if len(d) > look_over_x_top_words else len(d)]:
                 # calculate the future score of the X top words in the dictionary
                 score, future_matrix = calculates_future_score(dictionary_h,
@@ -100,17 +102,24 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
                     best_future_matrix = copy.deepcopy(future_matrix)
 
         if best_score < 0:
+            output_matrix = matrix
             break
-        previous_m_intersection_count = m_intersection_count
-        sc = matrix.place_word(best_word, c)
-        m_intersection_count = matrix.count_intersections()
-        # if doesn't fit or score didn't changed, quits
-        if sc == -1 or previous_m_intersection_count == m_intersection_count:
+        # backup
+        output_matrix = copy.deepcopy(matrix)
+        w_intersections = matrix.place_word(best_word, c)
+        # if new word has no intersections, quits
+        if len(used_words) > 0 and w_intersections == 0:
             break
-        print("selected word:",best_word,". future score:",best_score)
+        # if doesn't fit, quits
+        if w_intersections == -1:
+            break
+        # else, accepts matrix with new word
+        output_matrix = matrix                                          # not needed I think
+        print(f"selected word: {best_word}. future score: {best_score}")
         used_words.append(best_word)
         # remove current word out of the dictionary
         if best_word in dictionary_h: dictionary_h.remove(best_word)
         if best_word in dictionary_v: dictionary_v.remove(best_word)
         if __debug__: best_future_matrix.printM(' ',' ')
-    return best_future_matrix, used_words
+    if __debug__: print(f"best matrix found:\n{best_future_matrix.get_matrix_string(' ',' ')}\n")
+    return output_matrix, used_words

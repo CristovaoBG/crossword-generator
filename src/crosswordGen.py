@@ -12,7 +12,7 @@ def generate_crosswords_and_files(width, height, n_of_crosswords_to_generate, mi
     for i in range(0,n_of_crosswords_to_generate):
         matrix = crosswordMatrix.Matrix(width,height)
         while (matrix.count_intersections()<minimum_score):
-            matrix, used_words = algorythms.look_ahead(width,height,dictionary,10, c)#LOOK_OVER_X_TOP_WORDS)
+            matrix, used_words = algorythms.look_ahead(width,height,dictionary,5, c)#LOOK_OVER_X_TOP_WORDS)
         matrix.printM(" "," ")
         used_words_str = ""
         for word in used_words:
@@ -54,4 +54,4 @@ def find_forever(width, height, n_of_crosswords_to_generate, minimum_score, dict
 if __name__=="__main__":
     dictionary = fileHandler.get_dictionaries()
 
-    generate_crosswords_and_files(width=WIDTH, height=HEIGHT, n_of_crosswords_to_generate=15, minimum_score=37, dictionary=dictionary, c = True)
+    generate_crosswords_and_files(width=WIDTH, height=HEIGHT, n_of_crosswords_to_generate=15, minimum_score=35, dictionary=dictionary, c = True)
