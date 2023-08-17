@@ -121,5 +121,7 @@ def look_ahead(width, height, dictionaryOrig, look_over_x_top_words, c=False):
         if best_word in dictionary_h: dictionary_h.remove(best_word)
         if best_word in dictionary_v: dictionary_v.remove(best_word)
         if __debug__: best_future_matrix.printM(' ',' ')
-    if __debug__: print(f"best matrix found:\n{best_future_matrix.get_matrix_string(' ',' ')}\n")
+    if __debug__:
+        print("best matrix found: ")
+        output_matrix.printM(' ',' ')
     return output_matrix, used_words
